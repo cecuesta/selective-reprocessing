@@ -1,0 +1,126 @@
+version: '3.6'
+
+networks:
+  net_testing_env:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.30.0/24 # Specify subnet
+
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:3.7'
+    container_name: zookeeper
+    hostname: zookeeper
+    networks:
+      - net_testing_env
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: 'bitnami/kafka:3.1'
+    container_name: kafka
+    hostname: kafka
+    networks:
+      - net_testing_env
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+
+  elasticsearch:
+    image: 'elasticsearch:7.9.3'
+    container_name: elasticsearch
+    hostname: elasticsearch
+    ports:
+      - '9200:9200'
+    environment:
+      - discovery.type=single-node
+    networks:
+      - net_testing_env
+
+  nimbus:
+    image: storm:1.2.1
+    container_name: nimbus
+    hostname: nimbus
+    command: storm nimbus
+    depends_on:
+      - zookeeper
+    links:
+      - zookeeper
+    restart: always
+    volumes:
+      - /tmp/testing/storm/storm-test-1.2.2-dep.jar:/tmp/storm-test-1.2.2-dep.jar
+      - /tmp/testing/storm/topology.properties:/tmp/topology.properties
+    ports:
+      - 6627:6627
+    networks:
+      - net_testing_env
+
+  supervisor:
+    image: storm:1.2.1
+    container_name: supervisor
+    hostname: supervisor
+    command: storm supervisor
+    depends_on:
+      - nimbus
+      - zookeeper
+    links:
+      - nimbus
+      - zookeeper
+    restart: always
+    networks:
+      - net_testing_env
+
+  storm_ui:
+    image: storm:1.2.1
+    container_name: ui
+    hostname: ui
+    command: storm ui
+    depends_on:
+      - nimbus
+    links:
+      - nimbus
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - net_testing_env
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    hostname: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=mydatabase  
+    ports:
+      - 3306:3306
+    networks:
+      - net_testing_env
+
+  flume:
+    image: probablyfine/flume:2.0.0
+    container_name: flume
+    hostname: flume
+    restart: always
+    volumes:
+      - /tmp/testing/flume-conf/flume.conf:/opt/flume-config/flume.conf
+      - /tmp/testing/flume-conf/log4j.properties:/opt/flume-config/log4j.properties
+      - /tmp/testing/flume-conf/plugin-flume-1.0.0.jar:/opt/flume/lib/plugin-flume-1.0.0.jar
+      - /tmp/testing/flume-conf/mysql-connector-java-8.0.15.jar:/opt/flume/lib/mysql-connector-java-8.0.15.jar
+      - /tmp/testing/flume-input:/tmp/flume-input
+    environment:
+      - FLUME_AGENT_NAME=docker
+    networks:
+      - net_testing_env
+
