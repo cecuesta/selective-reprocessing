@@ -526,43 +526,36 @@ public class CasesManager {
 			);
 	private Map<String, Object> manageSpecialFieldsVozToHive(Map<String, Object> cdrData) {
 		Map<String, Object> cdrDataToHive = cdrData;
-		// Case (1) Se busca cell_end en el fichero de enriquecimiento topologia.txt. Si aparece se toma el campo correspondiente del fichero. Si no se etiqueta como "Desconocido"
 		for (String field: CASE1_FIELDS_VOZ) {	
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty()) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}	
-		// Case (2) Se busca cell_ini en el fichero de enriquecimiento topologia.txt. Si aparece se toma el campo correspondiente del fichero. Si no se etiqueta como "Desconocido"
 		for (String field: CASE2_FIELDS_VOZ) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty()) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (3) Se busca imei_tac en el fichero tac.csv. Si no aparece ó toma valor "" ó valor "OTHER" se pone "Desconocido". En otro caso se pone el valor.
 		for (String field: CASE3_FIELDS_VOZ) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty() || cdrData.get(field).toString().equalsIgnoreCase("OTHER")) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (4) Se buscarán los primeros dígitos del IMSI en el fichero hlr.txt. Si no se encuentran ó aparece como "NoAplica" se marcará como "No Disponible" y si no se pondrá su valor.
 		for (String field: CASE4_FIELDS_VOZ) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty() || cdrData.get(field).toString().equalsIgnoreCase("NoAplica")) {
 				cdrDataToHive.put(field, Constants.NO_DISPONIBLE);
 			}
 		}
-		// Case (5) Se busca msisdn_dst_homogeneo en el fichero de enriquecimiento tarifas.txt. Si no aparece ó toma valor "" ó valor "OTHER" ó valor "Not found" se pone "Desconocido". En otro caso se pone el valor.
 		for (String field: CASE5_FIELDS_VOZ) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty() || cdrData.get(field).toString().equalsIgnoreCase("OTHER") || cdrData.get(field).toString().equalsIgnoreCase("Not found")) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (6) Se busca msisdn_homogeneo en el fichero de enriquecimiento tarifas.txt.  Si no aparece ó toma valor "" ó valor "OTHER" ó valor "Not found" se pone "Desconocido". En otro caso se pone el valor.
 		for (String field: CASE6_FIELDS_VOZ) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty() || cdrData.get(field).toString().equalsIgnoreCase("OTHER") || cdrData.get(field).toString().equalsIgnoreCase("Not found")) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (7) Se buscará en el fichero de enriquecimiento nrn.txt. Si no aparece tomará el valor "Desconocido".
 		for (String field: CASE7_FIELDS_VOZ) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty()) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
@@ -605,57 +598,48 @@ public class CasesManager {
 
 	private Map<String, Object> manageSpecialFieldsDatoToHive(Map<String, Object> cdrData) {
 		Map<String, Object> cdrDataToHive = cdrData;
-		// Case (1) Se busca cell en el fichero de enriquecimiento topologia.txt. Si aparece se toma el campo correspondiente del fichero. Si no se etiqueta como "Desconocido"
 		for (String field: CASE1_FIELDS_DATOS) {	
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty()) {
 				LOG.info("Cambio valor a -Desconocido- si no existe: " + field);
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}	
-		// Case (2) Se buscarán los primeros dígitos del IMSI en el fichero hlr.txt. Si no se encuentran ó aparece como "NoAplica" se marcará como "No Disponible" y si no se pondrá su valor.
 		for (String field: CASE2_FIELDS_DATOS) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty() || cdrData.get(field).toString().equalsIgnoreCase("NoAplica")) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (3) Si aparece en el fichero de enriquecimiento ggsn.txt se pondrá su nombre. Si no se marcará como "Desconocido".
 		for (String field: CASE3_FIELDS_DATOS) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty()) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (4) Se busca el campo "Causa de cierre del CDR" en el fichero causeforrecclosing.txt. Si apoarece se pone su valor y si no se pone "Desconocido".
 		for (String field: CASE4_FIELDS_DATOS) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty()) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (5) Se busca el campo "Condición de cambio " en el fichero change_condition.txt.  Si aparece se pone su valor y si no se pone "Desconocido".
 		for (String field: CASE5_FIELDS_DATOS) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty()) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (6) Se busca imei_tac en el fichero tac.csv. Si no aparece ó toma valor "" ó valor "OTHER" se pone "Desconocido". En otro caso se pone el valor.
 		for (String field: CASE6_FIELDS_DATOS) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty() || cdrData.get(field).toString().equalsIgnoreCase("OTHER")) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (7) Si aparece en el fichero de enriquecimiento sgsn.txt se pondrá su nombre. Si no se marcará como "Desconocido".
 		for (String field: CASE7_FIELDS_DATOS) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty()) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (8) Se busca msisdn_homogeneo en el fichero de enriquecimiento tarifas.txt.  Si no aparece ó toma valor "" ó valor "OTHER" ó valor "Not found" -o valor "-999" se pone "Desconocido". En otro caso se pone el valor.
 		for (String field: CASE8_FIELDS_DATOS) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty() || cdrData.get(field).toString().equalsIgnoreCase("OTHER")
 				|| cdrData.get(field).toString().equalsIgnoreCase("Not Found") || cdrData.get(field).toString().equalsIgnoreCase("-999")) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);
 			}
 		}
-		// Case (34) Si aparece en el fichero de enriquecimiento ggsn.txt se pondrá su nombre. Si no se marcará como "Desconocido".
 		for (String field: CASE34_FIELDS_DATOS) {
 			if (cdrData.get(field) == null || cdrData.get(field).toString().isEmpty()) {
 				cdrDataToHive.put(field, Constants.UNKNOWN);

@@ -243,9 +243,6 @@ public class ProcessBolt extends BaseRichBolt {
 		LOG.info(msgx);
 		
 
-		
-		
-		//### TIPOS CDR
 		String listCdrTypesStr = (String)cdrProperties.get(edu.doc_ti.jfcp.selec_reproc.storm.utils.Keys.CDRS_TYPES);
 		if (Strings.isNullOrEmpty(listCdrTypesStr)){
 			String msg = "Property " + edu.doc_ti.jfcp.selec_reproc.storm.utils.Keys.CDRS_TYPES + " not defined";
@@ -254,7 +251,6 @@ public class ProcessBolt extends BaseRichBolt {
 			System.exit(-1) ;
 		}
 		
-		//### NÚMERO CAMPOS CDR FORZADOS A PROCESARSE
 		String forceNumber2Process = (String)cdrProperties.get(edu.doc_ti.jfcp.selec_reproc.storm.utils.Keys.CDRS_FORCE_NUMBER_PROCESS);
 		if (!Strings.isNullOrEmpty(forceNumber2Process)){
 			setForceNumber2Process(forceNumber2Process);
