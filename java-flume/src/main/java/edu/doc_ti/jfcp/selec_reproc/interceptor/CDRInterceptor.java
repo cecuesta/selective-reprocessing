@@ -62,9 +62,8 @@ public class CDRInterceptor implements Interceptor {
 				CDRRecord cdr = new CDRRecord (event.getBody(), event.getHeaders());
 
 				if (!fileR.getFile().equalsIgnoreCase(file)){
-					
 					jdbcInt.insert(fileR);
-					LOG.info("Change of file, data: " + fileR.getFile() + " size: " + fileR.getPosition() );
+					LOG.info("###### Change of file, data: " + fileR.getFile() + " size: " + fileR.getPosition() );
 
 					fileR.setFile(file);
 					fileR.setPosition(1);

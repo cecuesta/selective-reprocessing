@@ -1,13 +1,7 @@
 package edu.doc_ti.jfcp.selec_reproc.storm.bolt;
 
-import java.util.Arrays;
 import java.util.Map;
 
-import org.elasticsearch.action.bulk.BulkProcessor;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.storm.Config;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -15,9 +9,14 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
+import org.elasticsearch.action.bulk.BulkProcessor;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import edu.doc_ti.jfcp.selec_reproc.storm.utils.Constants;
-import edu.doc_ti.jfcp.selec_reproc.storm.utils.MyESUtils;
+import edu.doc_ti.jfcp.selec_reproc.utils.MyESUtils;
+
 
 public class ESInserterBolt extends BaseRichBolt{
 	public static final Logger LOG = LoggerFactory.getLogger(ESInserterBolt.class);
@@ -62,9 +61,9 @@ public class ESInserterBolt extends BaseRichBolt{
 		if ( ! isTickTuple(tuple)) {
 			
 			if ( INSERT_INTO_ES_ENABLED ) {
-				String index = tuple.getValue(Constants.INDEX_POSITION).toString();
-				String docType = tuple.getValue(Constants.DOCTYPE_POSITION).toString();
-				String json = tuple.getValue(Constants.DATA_POSITION).toString();
+				String index = tuple.getValue(0).toString();
+				String docType = tuple.getValue(1).toString();
+				String json = tuple.getValue(2).toString();
 				
 				LOG.debug("Send to ELK: {}" ,tuple);
 				bulkProcessor.add(
@@ -89,21 +88,7 @@ public class ESInserterBolt extends BaseRichBolt{
 			}
 
 			numTicks++;
-//			if ( numTicks%30 == 0 ) {
-//				try {
-//					LOG.info(
-//							String.format("ESINSERTER: %d records, waitNanos: %d, speed: %d recs/s." ,
-//									counter ,
-//									(nanosExecInsertES / (countExecNanos==0? 1:countExecNanos) ),
-//									(1000*countExecNanos)/(System.currentTimeMillis() - tsSpeed)
-//							)
-//					);
-//				} catch (Exception ex){}
-//					
-//				tsSpeed = System.currentTimeMillis() ;
-//		        nanosExecInsertES = 0 ;
-//		        countExecNanos = 0 ;
-//			}
+
 
 			if ( numTicks%120 == 0 ) {
 				try {
@@ -141,9 +126,7 @@ public class ESInserterBolt extends BaseRichBolt{
 	 */
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer ofd) {
-		String[] fields = Constants.MAP_FIELDS_REDIRECT.values().toArray(new String[0]);
-		Fields fObj = new Fields(Arrays.asList(fields));
-//		new Fields("index", "type", "filename", "outTopic", "data")		
+		Fields fObj = new Fields("index", "type", "data")	 ;	
 		ofd.declare(fObj);
 	}
 

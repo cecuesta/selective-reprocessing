@@ -1,50 +1,43 @@
-
-
+import static org.apache.storm.kafka.spout.FirstPollOffsetStrategy.EARLIEST;
 
 import java.io.FileReader;
-import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Properties;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.storm.Config;
-import org.apache.storm.LocalCluster;
 import org.apache.storm.StormSubmitter;
 import org.apache.storm.generated.StormTopology;
-import org.apache.storm.kafka.BrokerHosts;
-import org.apache.storm.kafka.KafkaSpout;
-import org.apache.storm.kafka.SpoutConfig;
-import org.apache.storm.kafka.StringScheme;
-import org.apache.storm.kafka.ZkHosts;
-import org.apache.storm.metric.LoggingMetricsConsumer;
-import org.apache.storm.shade.com.google.common.base.Strings;
-import org.apache.storm.spout.SchemeAsMultiScheme;
+import org.apache.storm.kafka.spout.ByTopicRecordTranslator;
+import org.apache.storm.kafka.spout.KafkaSpout;
+import org.apache.storm.kafka.spout.KafkaSpoutConfig;
+import org.apache.storm.kafka.spout.KafkaSpoutRetryExponentialBackoff;
+import org.apache.storm.kafka.spout.KafkaSpoutRetryExponentialBackoff.TimeInterval;
+import org.apache.storm.kafka.spout.KafkaSpoutRetryService;
 import org.apache.storm.topology.TopologyBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
 
-import edu.doc_ti.jfcp.selec_reproc.storm.bolt.BoltBuilder;
-import edu.doc_ti.jfcp.selec_reproc.storm.utils.Constants;
-import edu.doc_ti.jfcp.selec_reproc.storm.utils.Keys;
+import edu.doc_ti.jfcp.selec_reproc.storm.bolt.ProcessBolt;
+import edu.doc_ti.jfcp.selec_reproc.utils.Constants;
 
-
+/**
+ * This example sets up 3 topologies to put data in Kafka via the KafkaBolt,
+ * and shows how to set up a topology that reads from some Kafka topics using the KafkaSpout.
+ */
 public class LoadTopology {
-    public static final Logger LOG = LoggerFactory.getLogger(LoadTopology.class);
 
-    private BrokerHosts brokerHosts = null ;
-
-    private static String topicName = "testtopic_4" ;
-	private static String zookeeperRoot4Kafka = "storm/checkpoint" ;
-	private static String kafkaZookeeper = "" ;
-	private static String bootstrapKafkaServers = "";
+    private static String TOPIC_NAME = "topic_data" ;
+	private static String KAFKA_BROKERS = "kafka:9092";
 	private static String nimbusHosts = "" ;
 	
 	private static int    numWorkers = -1 ;
 	private static int    kafkaBPerWorker = -1 ;	
 	private static int    processPerWorker = -1 ;
-	private static int    esInsertPerWorker = -1 ;
+	private static int    esInsertPerWorker = -1 ;	
 	
-    public LoadTopology(String kafkaZookeeper) {
-        brokerHosts = new ZkHosts(kafkaZookeeper);
+
+    public static void main(String[] args) throws Exception {
+        new LoadTopology().runMain(args);
     }
 
     private static String getPropNotNull(Properties p, String key) {
@@ -59,58 +52,12 @@ public class LoadTopology {
     	}
     	
     	return value ;
-    }
-    
-	public StormTopology buildTopology(Config config) {
-    	
-    	System.out.println("##################################################################################") ;
-    	System.out.println("# V 1.0.0A ");
-    	System.out.println("# Num Workers: " + numWorkers) ;
-    	System.out.println("# kafka readers: " + (numWorkers*kafkaBPerWorker)) ;
-    	System.out.println("# process bolts: " + (numWorkers*processPerWorker)) ;
-    	System.out.println("# insert ES bolts: " + (numWorkers*esInsertPerWorker)) ;
-    	System.out.println("# kafka topic to read: " + topicName) ;
-    	System.out.println("##################################################################################") ;
-
-        SpoutConfig kafkaConfig = new SpoutConfig(brokerHosts, topicName, "", zookeeperRoot4Kafka);
-        kafkaConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
-//        kafkaConfig.bufferSizeBytes = 10*1024*1024 ;
-//        kafkaConfig.fetchSizeBytes  = 10*1024*1024 ;
-//        kafkaConfig.stateUpdateIntervalMs = 20000 ;
-        
-		
-//		Map confESBolt = new HashMap();
-//    	confESBolt.put("es.input.json", "true"); 
-//    	confESBolt.put("es.nodes", ELKHost ) ;
-//    	confESBolt.put("es.batch.size.entries", ELKBatchSize );
-//    	confESBolt.put("es.batch.size.bytes", "10m") ;
-		
-
-        TopologyBuilder builder = new TopologyBuilder();
-        BoltBuilder boltBuilder = new  BoltBuilder();
-    	
-    	builder.setSpout(edu.doc_ti.jfcp.selec_reproc.storm.utils.Constants.KAFKA_SPOUT_ID, 
-    			new KafkaSpout(kafkaConfig), 
-    			numWorkers*kafkaBPerWorker);    
-        builder.setBolt(edu.doc_ti.jfcp.selec_reproc.storm.utils.Constants.PROCESS_BOLT_ID, 
-        		boltBuilder.buildProcessBolt(), 
-        		numWorkers*processPerWorker)
-					.shuffleGrouping(edu.doc_ti.jfcp.selec_reproc.storm.utils.Constants.KAFKA_SPOUT_ID);
-    	builder.setBolt(edu.doc_ti.jfcp.selec_reproc.storm.utils.Constants.INSERT_BOLT_ID, 
-    			boltBuilder.buildESInserterBolt(), 
-    			numWorkers*esInsertPerWorker)
-    				.shuffleGrouping(edu.doc_ti.jfcp.selec_reproc.storm.utils.Constants.PROCESS_BOLT_ID,"stream-" + edu.doc_ti.jfcp.selec_reproc.storm.utils.Constants.INSERT_BOLT_ID);	
-    	
-
-    	
-        return builder.createTopology();
-    }
-
+    }    
     static Properties gProps = new Properties() ;
-
-
-	public static void main(String[] args) throws Exception {
-
+	private String KAFKA_CONSUMER_GROUP;
+	
+    protected void runMain(String[] args) throws Exception {
+ 
 		if ( args.length < 2) {
 			System.err.println("Usage: propsfile taskname");
 			System.exit(-1);
@@ -126,80 +73,58 @@ public class LoadTopology {
 			System.exit(-1) ;
 		}
 		
-	    topicName = getPropNotNull( gProps, Constants.K_TOPIC_NAME) ;
-		zookeeperRoot4Kafka = getPropNotNull( gProps, Constants.K_STORM_ZOOKEEPER_ROOT ) ;
-//		ELKHost = getPropNotNull( gProps, Constants.K_ELK_HOST ) ;
-//		ELKBatchSize = getPropNotNull( gProps, Constants.K_ELK_BATCH_SIZE ) ;
-		kafkaZookeeper = getPropNotNull( gProps, Constants.K_KAFKA_ZOOKEEPER ) ;
-        bootstrapKafkaServers = getPropNotNull( gProps, Constants.K_KAFKA_BOOTSTRAPSERVERS);
+		TOPIC_NAME = getPropNotNull( gProps, Constants.K_TOPIC_NAME) ;
+		KAFKA_CONSUMER_GROUP = getPropNotNull( gProps, Constants.K_KAFKA_CONSUMER_GROUP ) ;
+	
+		KAFKA_BROKERS = getPropNotNull( gProps, Constants.K_KAFKA_BOOTSTRAPSERVERS);
         nimbusHosts = getPropNotNull( gProps, Constants.K_STORM_NIMBUS_HOST) ;
-//        loadMode = getPropNotNull( gProps, Constants.K_LOAD_MODE) ;      
 		
         numWorkers = Integer.parseInt( getPropNotNull( gProps, Constants.K_NUMWORKERS) ) ;
         kafkaBPerWorker = Integer.parseInt( getPropNotNull( gProps, Constants.K_NUM_KAFKA_SPOUTS) ) ;
-        processPerWorker = Integer.parseInt( getPropNotNull( gProps, Keys.K_NUM_PROCESS) ) ;
+        processPerWorker = Integer.parseInt( getPropNotNull( gProps, Constants.K_NUM_PROCESS_BOLTS) ) ;
         esInsertPerWorker = Integer.parseInt( getPropNotNull( gProps, Constants.K_NUM_ES_BOLTS) ) ; 
 
-
-        LoadTopology myTopology = new LoadTopology(kafkaZookeeper);
-        Config config = new Config();
-       
-        String str_maxHeapSize = gProps.getProperty(Keys.WORKER_MAXHEAPSIZE) ;
-        if (!Strings.isNullOrEmpty(str_maxHeapSize)){
-        	try {
-        		int maxHeapSize = Integer.parseInt(str_maxHeapSize) * 1024;
-                config.put(Config.TOPOLOGY_WORKER_MAX_HEAP_SIZE_MB, maxHeapSize); 
-        	} catch (NumberFormatException nfe){}   
-        }
-          
-        config.put(Config.TOPOLOGY_WORKER_CHILDOPTS, getPropNotNull( gProps, Keys.WORKER_CHILDOPTS));
-//        config.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 100000000) ;
-//        config.put(Config.TOPOLOGY_MESSAGE_TIMEOUT_SECS, 60) ;
-//        config.put(Config.TOPOLOGY_ACKER_EXECUTORS, 3) ;
         
-//        config.setMaxSpoutPending(1000000);
-//        config.setMessageTimeoutSecs(1);
-//        config.setNumAckers(0);
-        config.registerMetricsConsumer(LoggingMetricsConsumer.class);
-//        config.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1000000);
         
-//        config.put(Config.TOPOLOGY_EXECUTOR_RECEIVE_BUFFER_SIZE, 1048576);
-//        config.put(Config.TOPOLOGY_EXECUTOR_SEND_BUFFER_SIZE, 1048576);
-//        config.put(Config.TOPOLOGY_TRIDENT_BATCH_EMIT_INTERVAL_MILLIS, 2000);
-
-        StormTopology stormTopology = myTopology.buildTopology(config);
-
-        if (args != null && args.length > 1) {
-
-            config.setNumWorkers(numWorkers);
-            config.setMaxTaskParallelism(400);
-//            config.setMaxSpoutPending(6000000);
-            config.put(Config.NIMBUS_SEEDS, Arrays.asList(nimbusHosts));
-            config.put(Config.NIMBUS_THRIFT_PORT, 6627);
-
-            for ( Enumeration<Object> en = gProps.keys(); en.hasMoreElements(); ) {
-            	Object key = en.nextElement() ;
-            	config.put((String) key, gProps.get(key)) ;
-            	System.out.println( "INPUT PARAMETER: " + String.format("[%s] : [%s]",(String) key, gProps.get(key)) );
-            }
-            config.put(Constants.K_STORM_CONFIG_FILE, args[0]) ;
-
-            config.put(Config.STORM_ZOOKEEPER_SERVERS, Arrays.asList(kafkaZookeeper));
-            config.put(Config.STORM_ZOOKEEPER_PORT, 2181);
-
-//            config.put(Config.NIMBUS_THRIFT_MAX_BUFFER_SIZE, 200000000 );
-            StormSubmitter.submitTopology(taskName, config, stormTopology);
-        } else {
-            config.setNumWorkers(2);
-            config.setMaxTaskParallelism(2);
-            LocalCluster cluster = new LocalCluster();
-            config.put(Config.STORM_ZOOKEEPER_PORT, 2181);
-            config.put(Config.STORM_ZOOKEEPER_SERVERS, Arrays.asList(kafkaZookeeper));
-            cluster.submitTopology("kafka", config, stormTopology);
-        }
         
+        Config tpConf = getConfig();
+
+        //Consumer. Sets up a topology that reads the given Kafka spouts and logs the received messages
+        StormSubmitter.submitTopology("storm-kafka-client-spout-test", tpConf, getTopologyKafkaSpout(getKafkaSpoutConfig(KAFKA_BROKERS)));
     }
-	
-	
 
+    protected Config getConfig() {
+        Config config = new Config();
+        
+        config.put(Config.TOPOLOGY_WORKER_CHILDOPTS, "-XX:+IgnoreUnrecognizedVMOptions");
+        
+        return config;
+    }
+
+    protected StormTopology getTopologyKafkaSpout(KafkaSpoutConfig<String, String> spoutConfig) {
+        final TopologyBuilder tp = new TopologyBuilder();
+        tp.setSpout("kafka_spout", new KafkaSpout<>(spoutConfig), 1);
+        tp.setBolt("kafka_bolt", new ProcessBolt()).shuffleGrouping("kafka_spout", TOPIC_NAME);
+        return tp.createTopology();
+    }
+
+    protected KafkaSpoutConfig<String, String> getKafkaSpoutConfig(String bootstrapServers) {
+        ByTopicRecordTranslator<String, String> trans = new ByTopicRecordTranslator<>(
+            (r) -> new Values(r.topic(), r.partition(), r.offset(), r.key(), r.value()),
+            new Fields("topic", "partition", "offset", "key", "value"), TOPIC_NAME);
+
+        return KafkaSpoutConfig.builder(bootstrapServers, new String[]{TOPIC_NAME})
+            .setProp(ConsumerConfig.GROUP_ID_CONFIG, KAFKA_CONSUMER_GROUP)
+            .setRetry(getRetryService())
+            .setRecordTranslator(trans)
+            .setOffsetCommitPeriodMs(10_000)
+            .setFirstPollOffsetStrategy(EARLIEST)
+            .setMaxUncommittedOffsets(250)
+            .build();
+    }
+
+    protected KafkaSpoutRetryService getRetryService() {
+        return new KafkaSpoutRetryExponentialBackoff(TimeInterval.microSeconds(500),
+            TimeInterval.milliSeconds(2), Integer.MAX_VALUE, TimeInterval.seconds(10));
+    }
 }

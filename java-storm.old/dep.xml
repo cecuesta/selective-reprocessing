@@ -1,0 +1,274 @@
+<assembly 
+  xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 
+  http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+ 
+  <!-- TODO: a jarjar format would be better -->
+  <id>dep</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>${basedir}/target/classes
+            </directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+    </fileSets>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <unpack>true</unpack>
+      <scope>runtime</scope>
+      <includes>
+<include>org.elasticsearch:elasticsearch</include>
+<include>org.elasticsearch.client:elasticsearch-rest-client</include>
+<include>org.elasticsearch.client:elasticsearch-rest-high-level-client</include>
+<include>org.elasticsearch.client:elasticsearch-rest-client-sniffer</include>
+<include>org.elasticsearch.client:transport</include>
+<include>org.apache.lucene:lucene-core</include>
+<include>org.apache.lucene:lucene-analyzers-common</include>
+<include>org.apache.lucene:lucene-backward-codecs</include>
+<include>org.apache.lucene:lucene-grouping</include>
+<include>org.apache.lucene:lucene-highlighter</include>
+<include>org.apache.lucene:lucene-join</include>
+<include>org.apache.lucene:lucene-memory</include>
+<include>org.apache.lucene:lucene-misc</include>
+<include>org.apache.lucene:lucene-queries</include>
+<include>org.apache.lucene:lucene-queryparser</include>
+<include>org.apache.lucene:lucene-sandbox</include>
+<include>org.apache.lucene:lucene-spatial</include>
+<include>org.apache.lucene:lucene-spatial-extras</include>
+<include>org.apache.lucene:lucene-spatial3d</include>
+<include>org.apache.lucene:lucene-suggest</include>
+<include>org.elasticsearch:securesm</include>
+<include>com.fasterxml.jackson.core:jackson-databind</include>
+<include>com.fasterxml.jackson.core:jackson-annotations</include>
+<include>com.fasterxml.jackson.core:jackson-core</include>
+<include>com.carrotsearch:hppc</include>
+<include>joda-time:joda-time</include>
+<include>org.codehaus.jackson:jackson-core-asl</include>
+<include>org.codehaus.jackson:jackson-mapper-asl</include>
+<include>org.codehaus.jackson:jackson-jaxrs</include>
+<include>org.codehaus.jackson:jackson-xc</include>
+<include>com.fasterxml.jackson.dataformat:jackson-dataformat-smile</include>
+<include>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml</include>
+<include>com.fasterxml.jackson.dataformat:jackson-dataformat-cbor</include>
+<include>org.apache.httpcomponents:httpclient</include>
+<include>org.apache.httpcomponents:httpcore</include>
+<include>org.apache.httpcomponents:httpasyncclient</include>
+<include>org.apache.httpcomponents:httpcore-nio</include>
+<include>org.elasticsearch:jna</include>
+<include>org.elasticsearch.client:transport</include>
+<include>org.elasticsearch.plugin:transport-netty3-client</include>
+<include>org.elasticsearch.plugin:transport-netty4-client</include>
+<include>org.elasticsearch.plugin:reindex-client</include>
+<include>org.elasticsearch.plugin:lang-mustache-client</include>
+<include>org.elasticsearch.plugin:percolator-client</include>
+<include>org.elasticsearch.plugin:parent-join-client</include>
+<include>org.elasticsearch.client:rest</include>
+<include>io.netty:netty</include>
+<include>io.netty:netty-buffer</include>
+<include>io.netty:netty-codec</include>
+<include>io.netty:netty-codec-http</include>
+<include>io.netty:netty-common</include>
+<include>io.netty:netty-handler</include>
+<include>io.netty:netty-resolver</include>
+<include>io.netty:netty-transport</include>
+<include>com.tdunning:t-digest</include>
+      </includes>
+      <excludes>
+<exclude>com.googlecode.json-simple:json-simple</exclude>
+<exclude>com.google.guava:guava</exclude>
+<exclude>org.apache.hadoop:hadoop-client</exclude>
+<exclude>org.apache.hadoop:hadoop-mapreduce-client-app</exclude>
+<exclude>org.apache.hadoop:hadoop-mapreduce-client-common</exclude>
+<exclude>org.apache.hadoop:hadoop-yarn-client</exclude>
+<exclude>org.apache.hadoop:hadoop-yarn-server-common</exclude>
+<exclude>org.apache.hadoop:hadoop-mapreduce-client-shuffle</exclude>
+<exclude>org.fusesource.leveldbjni:leveldbjni-all</exclude>
+<exclude>org.apache.hadoop:hadoop-yarn-api</exclude>
+<exclude>org.apache.hadoop:hadoop-mapreduce-client-core</exclude>
+<exclude>org.apache.hadoop:hadoop-yarn-common</exclude>
+<exclude>com.sun.jersey:jersey-client</exclude>
+<exclude>org.apache.hadoop:hadoop-mapreduce-client-jobclient</exclude>
+<exclude>com.hazelcast:hazelcast</exclude>
+<exclude>com.hazelcast:hazelcast-client</exclude>
+<exclude>mysql:mysql-connector-java</exclude>
+<exclude>com.google.protobuf:protobuf-java</exclude>
+<exclude>org.apache.hadoop:hadoop-common</exclude>
+<exclude>org.apache.hadoop:hadoop-annotations</exclude>
+<exclude>jdk.tools:jdk.tools</exclude>
+<exclude>commons-cli:commons-cli</exclude>
+<exclude>org.apache.commons:commons-math3</exclude>
+<exclude>commons-codec:commons-codec</exclude>
+<exclude>commons-io:commons-io</exclude>
+<exclude>commons-net:commons-net</exclude>
+<exclude>commons-collections:commons-collections</exclude>
+<exclude>javax.servlet:javax.servlet-api</exclude>
+<exclude>org.eclipse.jetty:jetty-server</exclude>
+<exclude>org.eclipse.jetty:jetty-http</exclude>
+<exclude>org.eclipse.jetty:jetty-io</exclude>
+<exclude>org.eclipse.jetty:jetty-util</exclude>
+<exclude>org.eclipse.jetty:jetty-servlet</exclude>
+<exclude>org.eclipse.jetty:jetty-security</exclude>
+<exclude>org.eclipse.jetty:jetty-webapp</exclude>
+<exclude>org.eclipse.jetty:jetty-xml</exclude>
+<exclude>javax.servlet.jsp:jsp-api</exclude>
+<exclude>com.sun.jersey:jersey-core</exclude>
+<exclude>javax.ws.rs:jsr311-api</exclude>
+<exclude>com.sun.jersey:jersey-servlet</exclude>
+<exclude>com.sun.jersey:jersey-json</exclude>
+<exclude>org.codehaus.jettison:jettison</exclude>
+<exclude>com.sun.xml.bind:jaxb-impl</exclude>
+<exclude>javax.xml.bind:jaxb-api</exclude>
+<exclude>javax.xml.stream:stax-api</exclude>
+<exclude>javax.activation:activation</exclude>
+<exclude>com.sun.jersey:jersey-server</exclude>
+<exclude>commons-logging:commons-logging</exclude>
+<exclude>log4j:log4j</exclude>
+<exclude>commons-lang:commons-lang</exclude>
+<exclude>commons-beanutils:commons-beanutils</exclude>
+<exclude>org.apache.commons:commons-configuration2</exclude>
+<exclude>org.apache.commons:commons-lang3</exclude>
+<exclude>org.slf4j:slf4j-api</exclude>
+<exclude>org.slf4j:slf4j-log4j12</exclude>
+<exclude>org.apache.avro:avro</exclude>
+<exclude>com.thoughtworks.paranamer:paranamer</exclude>
+<exclude>org.xerial.snappy:snappy-java</exclude>
+<exclude>com.google.re2j:re2j</exclude>
+<exclude>com.google.code.gson:gson</exclude>
+<exclude>org.apache.hadoop:hadoop-auth</exclude>
+<exclude>com.nimbusds:nimbus-jose-jwt</exclude>
+<exclude>com.github.stephenc.jcip:jcip-annotations</exclude>
+<exclude>net.minidev:json-smart</exclude>
+<exclude>net.minidev:accessors-smart</exclude>
+<exclude>com.jcraft:jsch</exclude>
+<exclude>org.apache.curator:curator-client</exclude>
+<exclude>org.apache.curator:curator-recipes</exclude>
+<exclude>com.google.code.findbugs:jsr305</exclude>
+<exclude>org.apache.htrace:htrace-core4</exclude>
+<exclude>org.apache.zookeeper:zookeeper</exclude>
+<exclude>jline:jline</exclude>
+<exclude>org.apache.commons:commons-compress</exclude>
+<exclude>org.tukaani:xz</exclude>
+<exclude>org.apache.kerby:kerb-simplekdc</exclude>
+<exclude>org.apache.kerby:kerb-client</exclude>
+<exclude>org.apache.kerby:kerby-config</exclude>
+<exclude>org.apache.kerby:kerb-core</exclude>
+<exclude>org.apache.kerby:kerby-pkix</exclude>
+<exclude>org.apache.kerby:kerby-asn1</exclude>
+<exclude>org.apache.kerby:kerby-util</exclude>
+<exclude>org.apache.kerby:kerb-common</exclude>
+<exclude>org.apache.kerby:kerb-crypto</exclude>
+<exclude>org.apache.kerby:kerb-util</exclude>
+<exclude>org.apache.kerby:token-provider</exclude>
+<exclude>org.apache.kerby:kerb-admin</exclude>
+<exclude>org.apache.kerby:kerb-server</exclude>
+<exclude>org.apache.kerby:kerb-identity</exclude>
+<exclude>org.apache.kerby:kerby-xdr</exclude>
+<exclude>org.codehaus.woodstox:stax2-api</exclude>
+<exclude>com.fasterxml.woodstox:woodstox-core</exclude>
+<exclude>net.sf.jopt-simple:jopt-simple</exclude>
+<exclude>org.hdrhistogram:HdrHistogram</exclude>
+<exclude>com.github.spullara.mustache.java:compiler</exclude>
+<exclude>org.apache.storm:storm-core</exclude>
+<exclude>com.esotericsoftware:kryo</exclude>
+<exclude>com.esotericsoftware:reflectasm</exclude>
+<exclude>org.ow2.asm:asm</exclude>
+<exclude>com.esotericsoftware:minlog</exclude>
+<exclude>org.objenesis:objenesis</exclude>
+<exclude>org.clojure:clojure</exclude>
+<exclude>ring-cors:ring-cors</exclude>
+<exclude>com.lmax:disruptor</exclude>
+<exclude>org.apache.logging.log4j:log4j-api</exclude>
+<exclude>org.apache.logging.log4j:log4j-core</exclude>
+<exclude>org.apache.logging.log4j:log4j-slf4j-impl</exclude>
+<exclude>io.dropwizard.metrics:metrics-core</exclude>
+<exclude>io.dropwizard.metrics:metrics-graphite</exclude>
+<exclude>io.dropwizard.metrics:metrics-ganglia</exclude>
+<exclude>info.ganglia.gmetric4j:gmetric4j</exclude>
+<exclude>org.acplt:oncrpc</exclude>
+<exclude>javax.servlet:servlet-api</exclude>
+<exclude>org.apache.storm:storm-kafka</exclude>
+<exclude>org.apache.curator:curator-framework</exclude>
+<exclude>org.apache.kafka:kafka-clients</exclude>
+<exclude>net.jpountz.lz4:lz4</exclude>
+<exclude>org.apache.storm:storm-hdfs</exclude>
+<exclude>org.yaml:snakeyaml</exclude>
+<exclude>org.apache.hadoop:hadoop-hdfs</exclude>
+<exclude>org.mortbay.jetty:jetty</exclude>
+<exclude>org.mortbay.jetty:jetty-util</exclude>
+<exclude>commons-daemon:commons-daemon</exclude>
+<exclude>tomcat:jasper-runtime</exclude>
+<exclude>commons-el:commons-el</exclude>
+<exclude>xmlenc:xmlenc</exclude>
+<exclude>xerces:xercesImpl</exclude>
+<exclude>xml-apis:xml-apis</exclude>
+<exclude>org.htrace:htrace-core</exclude>
+<exclude>io.confluent:kafka-avro-serializer</exclude>
+<exclude>io.confluent:kafka-schema-registry-client</exclude>
+<exclude>org.apache.storm:storm-hive</exclude>
+<exclude>org.apache.hive.hcatalog:hive-hcatalog-streaming</exclude>
+<exclude>org.apache.hive:hive-serde</exclude>
+<exclude>net.sf.opencsv:opencsv</exclude>
+<exclude>org.apache.hive:hive-metastore</exclude>
+<exclude>com.jolbox:bonecp</exclude>
+<exclude>org.apache.derby:derby</exclude>
+<exclude>org.datanucleus:datanucleus-api-jdo</exclude>
+<exclude>org.datanucleus:datanucleus-core</exclude>
+<exclude>org.datanucleus:datanucleus-rdbms</exclude>
+<exclude>commons-pool:commons-pool</exclude>
+<exclude>javax.jdo:jdo-api</exclude>
+<exclude>javax.transaction:jta</exclude>
+<exclude>org.antlr:antlr-runtime</exclude>
+<exclude>org.antlr:stringtemplate</exclude>
+<exclude>antlr:antlr</exclude>
+<exclude>org.apache.thrift:libfb303</exclude>
+<exclude>org.apache.hive:hive-exec</exclude>
+<exclude>org.apache.hive:hive-ant</exclude>
+<exclude>org.apache.velocity:velocity</exclude>
+<exclude>oro:oro</exclude>
+<exclude>commons-httpclient:commons-httpclient</exclude>
+<exclude>junit:junit</exclude>
+<exclude>org.antlr:ST4</exclude>
+<exclude>org.apache.ant:ant</exclude>
+<exclude>org.apache.ant:ant-launcher</exclude>
+<exclude>org.codehaus.groovy:groovy-all</exclude>
+<exclude>stax:stax-api</exclude>
+<exclude>org.fusesource.jansi:jansi</exclude>
+<exclude>org.apache.hive.hcatalog:hive-hcatalog-core</exclude>
+<exclude>org.apache.hive:hive-common</exclude>
+<exclude>org.apache.hive:hive-cli</exclude>
+<exclude>org.apache.hive:hive-service</exclude>
+<exclude>net.sf.jpam:jpam</exclude>
+<exclude>org.eclipse.jetty.aggregate:jetty-all</exclude>
+<exclude>org.apache.geronimo.specs:geronimo-jta_1.1_spec</exclude>
+<exclude>javax.mail:mail</exclude>
+<exclude>org.apache.geronimo.specs:geronimo-jaspic_1.0_spec</exclude>
+<exclude>org.apache.geronimo.specs:geronimo-annotation_1.0_spec</exclude>
+<exclude>asm:asm-commons</exclude>
+<exclude>asm:asm-tree</exclude>
+<exclude>asm:asm</exclude>
+<exclude>org.apache.hive:hive-shims</exclude>
+<exclude>org.apache.hive.shims:hive-shims-common</exclude>
+<exclude>org.apache.hive.shims:hive-shims-0.20</exclude>
+<exclude>org.apache.hive.shims:hive-shims-common-secure</exclude>
+<exclude>org.apache.hive.shims:hive-shims-0.20S</exclude>
+<exclude>org.apache.hive.shims:hive-shims-0.23</exclude>
+<exclude>org.apache.calcite:calcite-core</exclude>
+<exclude>org.apache.calcite:calcite-avatica</exclude>
+<exclude>org.pentaho:pentaho-aggdesigner-algorithm</exclude>
+<exclude>commons-dbcp:commons-dbcp</exclude>
+<exclude>eigenbase:eigenbase-properties</exclude>
+<exclude>net.hydromatic:linq4j</exclude>
+<exclude>net.hydromatic:quidem</exclude>
+<exclude>org.codehaus.janino:janino</exclude>
+<exclude>org.codehaus.janino:commons-compiler</exclude>
+<exclude>org.apache.thrift:libthrift</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+</assembly>

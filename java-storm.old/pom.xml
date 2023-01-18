@@ -10,10 +10,10 @@
 	</properties>
 
 	<groupId>com.hpe.cms</groupId>
-	<artifactId>mirador-storm-v2</artifactId>
+	<artifactId>mirador-storm</artifactId>
 	<packaging>jar</packaging>
-	<name>mirador-storm-v2</name>
-	<description>mirador-storm-v2</description>
+	<name>mirador-storm</name>
+	<description>mirador-storm</description>
 	<version>3.6.0</version>
 
 	<build>
@@ -118,16 +118,33 @@
 		<!--  <scope>provided</scope> --> 
 	</dependency>
 	<dependency>
-		<groupId>org.apache.kafka</groupId>
-		<artifactId>kafka-clients</artifactId>
-		<version>3.2.0</version>
-	</dependency>
-	<dependency>
 		<groupId>org.apache.storm</groupId>
-		<artifactId>storm-kafka-client</artifactId>
+		<artifactId>storm-kafka</artifactId>
 		<version>${storm-kafka.version}</version>
 	</dependency>
 		
+	<dependency>
+		<groupId>org.apache.storm</groupId>
+		<artifactId>storm-hdfs</artifactId>
+		<version>${storm-hdfs.version}</version>
+		<!-- EXCLUSIÓN JDK 1.7. DE LA LIB. HBASE-CLIENT -->
+		<exclusions>
+        	<exclusion>
+        		<groupId>org.apache.hbase</groupId>
+				<artifactId>hbase-client</artifactId>
+        	</exclusion>
+			<!-- cambio 2.1 -->
+			<exclusion>
+        		<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-client</artifactId>
+        	</exclusion>
+			<exclusion>
+        		<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-hdfs</artifactId>
+        	</exclusion>
+        	
+		</exclusions>
+	</dependency>
 	
 	<!-- cambio 2.2 -->
 	<dependency>
@@ -143,6 +160,18 @@
 	
 	<!-- cambio 2.3 -->
 	</dependency>
+	<dependency>
+		<groupId>org.apache.hadoop</groupId>
+		<artifactId>hadoop-hdfs</artifactId>
+		<version>3.1.1</version>
+		<exclusions>
+			<exclusion>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+			</exclusion>
+		</exclusions>
+	</dependency>
+
 	
 	<!-- log4j -->
 	<dependency>
@@ -160,8 +189,15 @@
             <activeByDefault>true</activeByDefault>
          </activation>      
 	     <properties>
-	     	<storm-core.version>2.4.0</storm-core.version>
-		<storm-kafka.version>2.4.0</storm-kafka.version>
+	     	<bigdata-commons.version>2.4.0</bigdata-commons.version>
+	     	<bigdata-commons-es.version>2.5.0</bigdata-commons-es.version>
+	     	<mirador-commons.version>1.0.0</mirador-commons.version>
+	     	<elasticsearch.version>5.5.1</elasticsearch.version>
+	     	<transport.version>5.5.1</transport.version>
+	     	<!-- MAYO 2020: Migración librerías STORM -->
+	     	<storm-core.version>1.2.1</storm-core.version>
+			<storm-kafka.version>1.2.1</storm-kafka.version>
+			<storm-hdfs.version>1.2.1</storm-hdfs.version>
 			
          </properties>
 	   </profile>
