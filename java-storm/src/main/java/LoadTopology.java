@@ -18,6 +18,7 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
 
 import edu.doc_ti.jfcp.selec_reproc.storm.bolt.ProcessBolt;
+import edu.doc_ti.jfcp.selec_reproc.storm.bolt.ProcessBoltDummy;
 import edu.doc_ti.jfcp.selec_reproc.utils.Constants;
 
 /**
@@ -90,7 +91,7 @@ public class LoadTopology {
         Config tpConf = getConfig();
 
         //Consumer. Sets up a topology that reads the given Kafka spouts and logs the received messages
-        StormSubmitter.submitTopology("storm-kafka-client-spout-test", tpConf, getTopologyKafkaSpout(getKafkaSpoutConfig(KAFKA_BROKERS)));
+        StormSubmitter.submitTopology(taskName, tpConf, getTopologyKafkaSpout(getKafkaSpoutConfig(KAFKA_BROKERS)));
     }
 
     protected Config getConfig() {
@@ -104,14 +105,19 @@ public class LoadTopology {
     protected StormTopology getTopologyKafkaSpout(KafkaSpoutConfig<String, String> spoutConfig) {
         final TopologyBuilder tp = new TopologyBuilder();
         tp.setSpout("kafka_spout", new KafkaSpout<>(spoutConfig), 1);
-        tp.setBolt("kafka_bolt", new ProcessBolt()).shuffleGrouping("kafka_spout", TOPIC_NAME);
+        tp.setBolt("process_bolt", new ProcessBolt()).shuffleGrouping("kafka_spout", TOPIC_NAME);
+        tp.setBolt("es_bolt", new ProcessBoltDummy()).shuffleGrouping("process_bolt");
         return tp.createTopology();
     }
 
     protected KafkaSpoutConfig<String, String> getKafkaSpoutConfig(String bootstrapServers) {
-        ByTopicRecordTranslator<String, String> trans = new ByTopicRecordTranslator<>(
-            (r) -> new Values(r.topic(), r.partition(), r.offset(), r.key(), r.value()),
-            new Fields("topic", "partition", "offset", "key", "value"), TOPIC_NAME);
+//        ByTopicRecordTranslator<String, String> trans = new ByTopicRecordTranslator<>(
+//                (r) -> new Values(r.topic(), r.partition(), r.offset(), r.key(), r.value()),
+//                new Fields("topic", "partition", "offset", "key", "value"), TOPIC_NAME);
+
+    	ByTopicRecordTranslator<String, String> trans = new ByTopicRecordTranslator<>(
+                (r) -> new Values( r.value()),
+                new Fields("value"), TOPIC_NAME);
 
         return KafkaSpoutConfig.builder(bootstrapServers, new String[]{TOPIC_NAME})
             .setProp(ConsumerConfig.GROUP_ID_CONFIG, KAFKA_CONSUMER_GROUP)
