@@ -48,28 +48,25 @@ services:
       - net_testing_env
 
   nimbus:
-    image: storm:1.2.1
+    image: storm:2.4.0
     container_name: nimbus
     hostname: nimbus
-    command: storm nimbus
+    command: storm nimbus -c topology.worker.max.heap.size.mb=65536 -c worker.heap.memory.mb=65536
     depends_on:
       - zookeeper
     links:
       - zookeeper
     restart: always
-    volumes:
-      - ${SR_ROOT:-/tmp/selective-reprocessing}/storm/storm-test-1.2.2-dep.jar:/tmp/storm-test-1.2.2-dep.jar
-      - ${SR_ROOT:-/tmp/selective-reprocessing}/storm/topology.properties:/tmp/topology.properties
     ports:
       - 6627:6627
     networks:
       - net_testing_env
 
   supervisor:
-    image: storm:1.2.1
+    image: storm:2.4.0
     container_name: supervisor
     hostname: supervisor
-    command: storm supervisor
+    command: storm supervisor -c worker.heap.memory.mb=65536 -c supervisor.memory.capacity.mb=262144 -c worker.profiler.enabled=true
     depends_on:
       - nimbus
       - zookeeper
@@ -77,11 +74,14 @@ services:
       - nimbus
       - zookeeper
     restart: always
+    volumes:
+      - /root/selective-reprocessing/storm/mirador-storm-v2-3.6.0-dep.jar:/tmp/storm-test-1.2.2-dep.jar
+      - /root/selective-reprocessing/storm/topology.properties:/tmp/topology.properties
     networks:
       - net_testing_env
 
   storm_ui:
-    image: storm:1.2.1
+    image: storm:2.4.0
     container_name: ui
     hostname: ui
     command: storm ui

@@ -26,10 +26,10 @@ git clone https://github.com/doc-ti/selective-reprocessing.git
 mkdir flume-input
 
 cd ${SR_DIR}/java-flume
-mvn clean install
+mvn clean install -Dmaven.wagon.http.ssl.insecure=true
 
 cd ${SR_DIR}/java-storm
-mvn clean install assembly:single
+mvn clean install assembly:single -Dmaven.wagon.http.ssl.insecure=true
 
 cd ${SR_DIR}
 ln -s ../java-flume/target/plugin-flume-1.0.0.jar flume-conf/
@@ -38,14 +38,23 @@ ln -s ../java-storm/target/storm-test-1.2.2-dep.jar storm/
 cd ${SR_DIR}
 docker-compose up -d
 
-FFF=data.txt.`date +%Y%m%d_%H%M%S`
-for NN in `seq 1 100`
+FFF=data_`date +%Y%m%d_%H%M%S`
+export BASE=$RANDOM
+for NN in `seq $BASE $((BASE+9))`
 do
   echo $NN,$RANDOM
 done > $FFF
-
+ls -l $FFF
 mv $FFF flume-input/
 
 docker exec -it kafka kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic topic_data --from-beginning
+
+docker exec -it mysql mysql -u root -prootpass -e "select * from info_files;" mydatabase 
+
+docker exec -it supervisor storm jar /tmp/storm-test-1.2.2-dep.jar LoadTopology /tmp/topology.properties topology-load-data
+docker exec -it supervisor storm kill  topology-load-data -w 5
+
+docker exec -it supervisor bash
+
 
 
