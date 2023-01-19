@@ -85,7 +85,7 @@ private static RestHighLevelClient getRestHighLevelClient(Map props ) {
 						LOG.info("[{}] ELASTICSEARCH: Connecting to ES Node: [{}:{}]",  hostsPorts[0], hostsPorts[1]);
 					} else {
 						hostsTmp.add( new HttpHost(aux.trim(), 9200, "http"));
-						LOG.info("[{}] ELASTICSEARCH: Connecting to ES Node: [{}:9200]",  aux.trim());					
+						LOG.info("ELASTICSEARCH: Connecting to ES Node: [" + aux.trim() + " :9200]"  );					
 					}
 				}
 				Collections.shuffle(hostsTmp);

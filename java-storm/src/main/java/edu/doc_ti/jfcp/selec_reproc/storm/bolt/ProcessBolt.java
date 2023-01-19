@@ -59,7 +59,9 @@ public class ProcessBolt extends BaseRichBolt {
     		ex.printStackTrace(); 
         }
         
-		 collector.emit(tuple ,  new Values("index-data", "json-data") ) ;
+        String jsonData = "{ \"campo1\"  : \"dato1\", \"ts\" : " + System.currentTimeMillis() + " }" ; 
+        
+		 collector.emit(tuple ,  new Values("index-data", jsonData) ) ;
 //    			 new Values(index, 
 //	 	    		docType, 
 //	 	    		file, 

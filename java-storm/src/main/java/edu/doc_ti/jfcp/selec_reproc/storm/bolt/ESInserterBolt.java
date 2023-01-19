@@ -1,5 +1,7 @@
 package edu.doc_ti.jfcp.selec_reproc.storm.bolt;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import org.apache.storm.Config;
@@ -62,12 +64,11 @@ public class ESInserterBolt extends BaseRichBolt{
 			
 			if ( INSERT_INTO_ES_ENABLED ) {
 				String index = tuple.getValue(0).toString();
-				String docType = tuple.getValue(1).toString();
-				String json = tuple.getValue(2).toString();
+				String json = tuple.getValue(1).toString();
 				
 				LOG.debug("Send to ELK: {}" ,tuple);
 				bulkProcessor.add(
-		        		new IndexRequest(index, docType)
+		        		new IndexRequest(index, "_doc")
 		        			.source(json, XContentType.JSON)
 		        		);
 			}
@@ -113,7 +114,16 @@ public class ESInserterBolt extends BaseRichBolt{
 	public void prepare(Map conf, TopologyContext context, OutputCollector outputcollector) {
 		_collector = outputcollector ;
         propsLookup = conf ;
-
+        
+        ArrayList<String> keys = new ArrayList<String>() ;
+        for (Object key: propsLookup.keySet()) {
+        	keys.add(key.toString()) ;
+        }
+        Collections.sort(keys); 
+        for ( String key: keys) {
+        	LOG.info("ESInserterBolt property [{}] value [{}]", key, propsLookup.get(key));
+        }
+        
         loadMainParameters();
 
 		if ( bulkProcessor  == null ) {

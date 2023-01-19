@@ -1,6 +1,7 @@
 import static org.apache.storm.kafka.spout.FirstPollOffsetStrategy.EARLIEST;
 
 import java.io.FileReader;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -17,8 +18,8 @@ import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
 
+import edu.doc_ti.jfcp.selec_reproc.storm.bolt.ESInserterBolt;
 import edu.doc_ti.jfcp.selec_reproc.storm.bolt.ProcessBolt;
-import edu.doc_ti.jfcp.selec_reproc.storm.bolt.ProcessBoltDummy;
 import edu.doc_ti.jfcp.selec_reproc.utils.Constants;
 
 /**
@@ -86,16 +87,21 @@ public class LoadTopology {
         esInsertPerWorker = Integer.parseInt( getPropNotNull( gProps, Constants.K_NUM_ES_BOLTS) ) ; 
 
         
-        
-        
-        Config tpConf = getConfig();
+        Config tpConf = getConfig(args);
 
         //Consumer. Sets up a topology that reads the given Kafka spouts and logs the received messages
         StormSubmitter.submitTopology(taskName, tpConf, getTopologyKafkaSpout(getKafkaSpoutConfig(KAFKA_BROKERS)));
     }
 
-    protected Config getConfig() {
+    protected Config getConfig(String[] args) {
         Config config = new Config();
+
+        for ( Enumeration<Object> en = gProps.keys(); en.hasMoreElements(); ) {
+        	Object key = en.nextElement() ;
+        	config.put((String) key, gProps.get(key)) ;
+        	System.out.println( "INPUT PARAMETER: " + String.format("[%s] : [%s]",(String) key, gProps.get(key)) );
+        }
+        config.put(Constants.K_STORM_CONFIG_FILE, args[0]) ;        
         
         config.put(Config.TOPOLOGY_WORKER_CHILDOPTS, "-XX:+IgnoreUnrecognizedVMOptions");
         
@@ -106,7 +112,13 @@ public class LoadTopology {
         final TopologyBuilder tp = new TopologyBuilder();
         tp.setSpout("kafka_spout", new KafkaSpout<>(spoutConfig), 1);
         tp.setBolt("process_bolt", new ProcessBolt()).shuffleGrouping("kafka_spout", TOPIC_NAME);
-        tp.setBolt("es_bolt", new ProcessBoltDummy()).shuffleGrouping("process_bolt");
+        
+        
+//        tp.setBolt("es_bolt", new ProcessBoltDummy()).shuffleGrouping("process_bolt");
+        tp.setBolt("es_bolt", new ESInserterBolt()).shuffleGrouping("process_bolt");
+        
+                
+        
         return tp.createTopology();
     }
 
