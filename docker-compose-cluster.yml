@@ -83,7 +83,7 @@ services:
     container_name: elasticsearch01
     hostname: elasticsearch01
     ports:
-      - '9200:9200'
+      - '19200:9200'
     environment:
       node.name: esnode_01
       discovery.seed_hosts: elasticsearch02,elastisearch03
@@ -103,7 +103,7 @@ services:
     container_name: elasticsearch02
     hostname: elasticsearch02
     ports:
-      - '9201:9200'
+      - '19201:9200'
     environment:
       node.name: esnode_02
       discovery.seed_hosts: elasticsearch01,elastisearch03
@@ -123,7 +123,7 @@ services:
     container_name: elasticsearch03
     hostname: elasticsearch03
     ports:
-      - '9202:9200'
+      - '19202:9200'
     environment:
       node.name: esnode_03
       discovery.seed_hosts: elasticsearch01,elastisearch03
@@ -138,18 +138,18 @@ services:
         soft: -1
         hard: -1
 
-  kibana:
-    image: kibana:7.9.3
-    container_name: kibana
-    hostname: kibana
-    ports:
-      - 5601:5601
-    environment:
-      - ELASTICSEARCH_HOSTS=["http://elasticsearch01:9200","http://elasticsearch02:9200","http://elasticsearch03:9200"]
-    networks:
-      - net_testing_env
-    depends_on:
-      - elasticsearch01
+#  kibana:
+#    image: kibana:7.9.3
+#    container_name: kibana
+#    hostname: kibana
+#    ports:
+#      - 5601:5601
+#    environment:
+#      - ELASTICSEARCH_HOSTS=["http://elasticsearch01:9200","http://elasticsearch02:9200","http://elasticsearch03:9200"]
+#    networks:
+#      - net_testing_env
+#    depends_on:
+#      - elasticsearch01
 
   nimbus:
     image: storm:2.4.0
@@ -163,6 +163,10 @@ services:
     restart: always
     ports:
       - 6627:6627
+    volumes:
+      - ${SR_ROOT:-/tmp/selective-reprocessing}/storm/:/tmp/storm
+#      - ${SR_ROOT:-/tmp/selective-reprocessing}/storm/topology.properties:/tmp/topology.properties
+#      - ${SR_ROOT:-/tmp/selective-reprocessing}/storm/topology.properties:/tmp/topology.properties
     networks:
       - net_testing_env
 
@@ -178,9 +182,6 @@ services:
       - nimbus
       - zookeeper
     restart: always
-    volumes:
-      - /home/felipe/selective-reprocessing/storm/mirador-storm-v2-3.6.0-dep.jar:/tmp/storm-test-1.2.2-dep.jar
-      - /home/felipe/selective-reprocessing/storm/topology.properties:/tmp/topology.properties
     networks:
       - net_testing_env
 
