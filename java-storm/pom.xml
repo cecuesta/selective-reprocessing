@@ -10,11 +10,11 @@
 	</properties>
 
 	<groupId>com.hpe.cms</groupId>
-	<artifactId>mirador-storm-v2</artifactId>
+	<artifactId>sr-storm</artifactId>
 	<packaging>jar</packaging>
-	<name>mirador-storm-v2</name>
+	<name>sr-storm</name>
 	<description>mirador-storm-v2</description>
-	<version>3.6.0</version>
+	<version>1.0.0</version>
 
 	<build>
 	<plugins>
