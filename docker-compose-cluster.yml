@@ -9,57 +9,23 @@ networks:
 
 services:
 
-  zookeeper1:
-    image: zookeeper:3.7.0
-    restart: always
-    container_name: zookeeper1
-    hostname: zookeeper1
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:3.7'
+    container_name: zookeeper
+    hostname: zookeeper
     networks:
       - net_testing_env
     ports:
-      - 2181:2181
-    networks:
-      - net_testing_env
+      - '2181:2181'
     environment:
-      ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
+      - ALLOW_ANONYMOUS_LOGIN=yes
 
-  zookeeper2:
-    image: zookeeper:3.7.0
-    restart: always
-    hostname: zookeeper2
-    container_name: zookeeper2
-    networks:
-      - net_testing_env
-    ports:
-      - 2182:2181
-    networks:
-      - net_testing_env
-    environment:
-      ZOO_MY_ID: 2
-      ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
-
-  zookeeper3:
-    image: zookeeper:3.7.0
-    restart: always
-    hostname: zookeeper3
-    container_name: zookeeper3
-    networks:
-      - net_testing_env
-    ports:
-      - 2183:2181
-    networks:
-      - net_testing_env
-    environment:
-      ZOO_MY_ID: 3
-      ZOO_SERVERS: server.1=zookeeper1:2888:3888;2181 server.2=zookeeper2:2888:3888;2181 server.3=zookeeper3:2888:3888;2181
-
-  zoonavigator:
-     container_name: zoonavigator
-     image: elkozmon/zoonavigator
-     ports:
-       - 9001:9000
-
+#  zoonavigator:
+#     container_name: zoonavigator
+#     image: elkozmon/zoonavigator
+#     ports:
+#       - 9001:9000
 
   kafka01:
     image: 'bitnami/kafka:3.2'
@@ -73,12 +39,10 @@ services:
       - KAFKA_BROKER_ID=1
       - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka01:9092
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
-      - zookeeper1
-      - zookeeper2
-      - zookeeper3
+      - zookeeper
 
   kafka02:
     image: 'bitnami/kafka:3.2'
@@ -92,12 +56,10 @@ services:
       - KAFKA_BROKER_ID=2
       - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka02:9092
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
-      - zookeeper1
-      - zookeeper2
-      - zookeeper3
+      - zookeeper
 
   kafka03:
     image: 'bitnami/kafka:3.2'
@@ -111,98 +73,184 @@ services:
       - KAFKA_BROKER_ID=3
       - KAFKA_CFG_LISTENERS=PLAINTEXT://0.0.0.0:9092
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka03:9092
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
-      - zookeeper1
-      - zookeeper2
-      - zookeeper3
+      - zookeeper
 
-#  elasticsearch:
-#    image: 'elasticsearch:7.9.3'
-#    container_name: elasticsearch
-#    hostname: elasticsearch
-#    ports:
-#      - '9200:9200'
-#    environment:
-#      - discovery.type=single-node
-#    networks:
-#      - net_testing_env
-#
-#  nimbus:
-#    image: storm:2.4.0
-#    container_name: nimbus
-#    hostname: nimbus
-#    command: storm nimbus -c topology.worker.max.heap.size.mb=65536 -c worker.heap.memory.mb=65536
-#    depends_on:
-#      - zookeeper
-#    links:
-#      - zookeeper
-#    restart: always
-#    ports:
-#      - 6627:6627
-#    networks:
-#      - net_testing_env
-#
-#  supervisor:
-#    image: storm:2.4.0
-#    container_name: supervisor
-#    hostname: supervisor
-#    command: storm supervisor -c worker.heap.memory.mb=65536 -c supervisor.memory.capacity.mb=262144 -c worker.profiler.enabled=true
-#    depends_on:
-#      - nimbus
-#      - zookeeper
-#    links:
-#      - nimbus
-#      - zookeeper
-#    restart: always
-#    volumes:
-#      - /root/selective-reprocessing/storm/mirador-storm-v2-3.6.0-dep.jar:/tmp/storm-test-1.2.2-dep.jar
-#      - /root/selective-reprocessing/storm/topology.properties:/tmp/topology.properties
-#    networks:
-#      - net_testing_env
-#
-#  storm_ui:
-#    image: storm:2.4.0
-#    container_name: ui
-#    hostname: ui
-#    command: storm ui
-#    depends_on:
-#      - nimbus
-#    links:
-#      - nimbus
-#    restart: always
-#    ports:
-#      - 8080:8080
-#    networks:
-#      - net_testing_env
-#
-#  mysql:
-#    image: mysql:5.7
-#    container_name: mysql
-#    hostname: mysql
-#    restart: always
-#    environment:
-#      - MYSQL_ROOT_PASSWORD=rootpass
-#      - MYSQL_DATABASE=mydatabase  
-#    ports:
-#      - 3306:3306
-#    networks:
-#      - net_testing_env
-#
-#  flume:
-#    image: probablyfine/flume:2.0.0
-#    container_name: flume
-#    hostname: flume
-#    restart: always
-#    volumes:
-#      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/flume.conf:/opt/flume-config/flume.conf
-#      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/log4j.properties:/opt/flume-config/log4j.properties
-#      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/plugin-flume-1.0.0.jar:/opt/flume/lib/plugin-flume-1.0.0.jar
-#      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/mysql-connector-java-8.0.15.jar:/opt/flume/lib/mysql-connector-java-8.0.15.jar
-#      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-input:/tmp/flume-input
-#    environment:
-#      - FLUME_AGENT_NAME=docker
-#    networks:
-#      - net_testing_env
-#
+  elasticsearch01:
+    image: 'elasticsearch:7.9.3'
+    container_name: elasticsearch01
+    hostname: elasticsearch01
+    ports:
+      - '9200:9200'
+    environment:
+      node.name: esnode_01
+      discovery.seed_hosts: elasticsearch02,elastisearch03
+      cluster.initial_master_nodes: esnode_01,esnode_02,esnode_03
+      cluster.name: cluster_es
+      bootstrap.memory_lock: "false"
+      ES_JAVA_OPTS: -Xms256m -Xmx256m
+    networks:
+      - net_testing_env
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  elasticsearch02:
+    image: 'elasticsearch:7.9.3'
+    container_name: elasticsearch02
+    hostname: elasticsearch02
+    ports:
+      - '9201:9200'
+    environment:
+      node.name: esnode_02
+      discovery.seed_hosts: elasticsearch01,elastisearch03
+      cluster.initial_master_nodes: esnode_01,esnode_02,esnode_03
+      cluster.name: cluster_es
+      bootstrap.memory_lock: "true"
+      ES_JAVA_OPTS: -Xms256m -Xmx256m
+    networks:
+      - net_testing_env
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  elasticsearch03:
+    image: 'elasticsearch:7.9.3'
+    container_name: elasticsearch03
+    hostname: elasticsearch03
+    ports:
+      - '9202:9200'
+    environment:
+      node.name: esnode_03
+      discovery.seed_hosts: elasticsearch01,elastisearch03
+      cluster.initial_master_nodes: esnode_01,esnode_02,esnode_03
+      cluster.name: cluster_es
+      bootstrap.memory_lock: "true"
+      ES_JAVA_OPTS: -Xms256m -Xmx256m
+    networks:
+      - net_testing_env
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  kibana:
+    image: kibana:7.9.3
+    container_name: kibana
+    hostname: kibana
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=["http://elasticsearch01:9200","http://elasticsearch02:9200","http://elasticsearch03:9200"]
+    networks:
+      - net_testing_env
+    depends_on:
+      - elasticsearch01
+
+  nimbus:
+    image: storm:2.4.0
+    container_name: nimbus
+    hostname: nimbus
+    command: storm nimbus -c topology.worker.max.heap.size.mb=65536 -c worker.heap.memory.mb=65536
+    depends_on:
+      - zookeeper
+    links:
+      - zookeeper
+    restart: always
+    ports:
+      - 6627:6627
+    networks:
+      - net_testing_env
+
+  supervisor1:
+    image: storm:2.4.0
+    container_name: supervisor1
+    hostname: supervisor1
+    command: storm supervisor -c worker.heap.memory.mb=65536 -c supervisor.memory.capacity.mb=262144 -c worker.profiler.enabled=true
+    depends_on:
+      - nimbus
+      - zookeeper
+    links:
+      - nimbus
+      - zookeeper
+    restart: always
+    volumes:
+      - /home/felipe/selective-reprocessing/storm/mirador-storm-v2-3.6.0-dep.jar:/tmp/storm-test-1.2.2-dep.jar
+      - /home/felipe/selective-reprocessing/storm/topology.properties:/tmp/topology.properties
+    networks:
+      - net_testing_env
+
+  supervisor2:
+    image: storm:2.4.0
+    container_name: supervisor2
+    hostname: supervisor2
+    command: storm supervisor -c worker.heap.memory.mb=65536 -c supervisor.memory.capacity.mb=262144 -c worker.profiler.enabled=true
+    depends_on:
+      - nimbus
+      - zookeeper
+    links:
+      - nimbus
+      - zookeeper
+    restart: always
+    networks:
+      - net_testing_env
+
+
+  storm_ui:
+    image: storm:2.4.0
+    container_name: ui
+    hostname: ui
+    command: storm ui
+    depends_on:
+      - nimbus
+    links:
+      - nimbus
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - net_testing_env
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    hostname: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=mydatabase  
+    ports:
+      - 3306:3306
+    networks:
+      - net_testing_env
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    hostname: adminer
+    restart: always
+    ports:
+      - 8081:8080
+    networks:
+      - net_testing_env
+
+  flume:
+    image: probablyfine/flume:2.0.0
+    container_name: flume
+    hostname: flume
+    restart: always
+    volumes:
+      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/flume.conf:/opt/flume-config/flume.conf
+      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/log4j.properties:/opt/flume-config/log4j.properties
+      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/plugin-flume-1.0.0.jar:/opt/flume/lib/plugin-flume-1.0.0.jar
+      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/mysql-connector-java-8.0.15.jar:/opt/flume/lib/mysql-connector-java-8.0.15.jar
+      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-input:/tmp/flume-input
+    environment:
+      - FLUME_AGENT_NAME=docker
+    networks:
+      - net_testing_env
+
