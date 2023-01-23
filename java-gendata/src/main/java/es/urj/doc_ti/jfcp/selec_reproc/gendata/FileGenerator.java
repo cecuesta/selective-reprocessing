@@ -36,6 +36,7 @@ public class FileGenerator {
 //		                Csv.Column.of("xxx", () -> myFaker.myNumbers().nextInsectName() ),
 		                Csv.Column.of("xxx", () -> myFaker.MyElements().nextDeterminedDistribElement("id1") ),
 		                Csv.Column.of("xxx", () -> myFaker.MyElements().exponentialDistributedNumber(10, 4) ),
+		                Csv.Column.of("xxx", () -> myFaker.expression("#{numerify '310004##########'}")) ,
 		                Csv.Column.of("xxx", () -> myFaker.date().between(from, to, "yyyy-MM-dd'T'HH:mm:ss") ) 
 		                
 		                )

@@ -2,7 +2,6 @@ package es.urj.doc_ti.jfcp.selec_reproc.gendata;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 import net.datafaker.providers.base.AbstractProvider;
@@ -17,7 +16,9 @@ public class MyElements extends AbstractProvider<BaseProviders> {
     static Hashtable<String, DistribData> distributions = new Hashtable<String, DistribData> () ;
     static {
     	loadDistrib( "id1", d1Names, d1Vals ) ;
-    	
+     	DistribData data = new DistribData() ;
+    	data.addIpsWithExponential(8, 1000, 1234);
+    	distributions.put ( "ips" , data) ;    
     }
     
 
