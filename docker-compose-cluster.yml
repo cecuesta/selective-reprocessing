@@ -83,7 +83,7 @@ services:
     container_name: elasticsearch01
     hostname: elasticsearch01
     ports:
-      - '19200:9200'
+      - '9200:9200'
     environment:
       node.name: esnode_01
       discovery.seed_hosts: elasticsearch02,elastisearch03
@@ -103,7 +103,7 @@ services:
     container_name: elasticsearch02
     hostname: elasticsearch02
     ports:
-      - '19201:9200'
+      - '9201:9200'
     environment:
       node.name: esnode_02
       discovery.seed_hosts: elasticsearch01,elastisearch03
@@ -123,7 +123,7 @@ services:
     container_name: elasticsearch03
     hostname: elasticsearch03
     ports:
-      - '19202:9200'
+      - '9202:9200'
     environment:
       node.name: esnode_03
       discovery.seed_hosts: elasticsearch01,elastisearch03

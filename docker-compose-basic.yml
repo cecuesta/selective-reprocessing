@@ -41,7 +41,7 @@ services:
     container_name: elasticsearch
     hostname: elasticsearch
     ports:
-      - '9200:9200'
+      - '19200:9200'
     environment:
       - discovery.type=single-node
     networks:
