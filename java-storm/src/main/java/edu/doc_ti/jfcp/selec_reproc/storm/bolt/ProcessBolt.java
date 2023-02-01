@@ -30,6 +30,11 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.doc_ti.jfcp.selec_reproc.utils.CDRData;
 
 public class ProcessBolt extends BaseRichBolt {
     /**
@@ -39,35 +44,46 @@ public class ProcessBolt extends BaseRichBolt {
 
 	protected static final Logger LOG = LoggerFactory.getLogger(ProcessBolt.class);
     private OutputCollector collector;
+    private ObjectMapper mapper  ;
+    private TypeReference<Map<String, String>> typeRef  ;
 
+    
     @Override
     public void prepare(Map<String, Object> topoConf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
-    }
+		mapper = new ObjectMapper();
+		typeRef = new TypeReference<Map<String, String>>(){} ;    }
 
+    long newLogAt = 0 ;
+    
     @Override
     public void execute(Tuple tuple) {
-        LOG.info("XXXXXXXXXXXXXXXXXX input = [" + tuple + "]");
-        try {
-        	LOG.info("XXXXXXXXXXXXXXXXXX data1 = [" + tuple.getValue(0) + "]");
+
+    	boolean inLog = System.currentTimeMillis() >= newLogAt ;
+    	if ( inLog ) {
+    		LOG.info("input = [" + tuple + "]");
+    		newLogAt+= 5000 ;
+    	}
+
+    	
+    	try {
+    		
+    		CDRData cdr = new CDRData( tuple.getValue(0).toString() ) ;
+	        String jsonData = "{ \"campo1\"  : \"dato1\", \"ts\" : " + System.currentTimeMillis() + " }" ;
+
+	        
+	        
+	        jsonData = mapper.writeValueAsString(cdr.getCdrData()) ;
+
+	        if ( inLog ) {
+	        	LOG.info("hashMap: " + cdr.getCdrData() );
+	        	LOG.info("json: " + jsonData);
+	        }
+	        
+			collector.emit(tuple ,  new Values("index-data", jsonData) ) ;
     	} catch (Exception ex) {
     		ex.printStackTrace(); 
     	}
-        try {
-        	LOG.info("XXXXXXXXXXXXXXXXXX value = [" + tuple.getValueByField("value") + "]");
-        } catch (Exception ex) {
-    		ex.printStackTrace(); 
-        }
-        
-        String jsonData = "{ \"campo1\"  : \"dato1\", \"ts\" : " + System.currentTimeMillis() + " }" ; 
-        
-		 collector.emit(tuple ,  new Values("index-data", jsonData) ) ;
-//    			 new Values(index, 
-//	 	    		docType, 
-//	 	    		file, 
-//	 	    		outKafkaTopic, 
-//	 	    		objToELK ) 
-//		 ) ;
         
         collector.ack(tuple);
     }
