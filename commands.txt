@@ -17,10 +17,10 @@ apt-get install git
 
 #usermod -a -G docker <user>
 
-export SR_ROOT=/root
-export SR_DIR=${SR_ROOT}/selective-reprocessing
+export SR_DIR=/root
+export SR_DIR=${SR_DIR}/selective-reprocessing
 
-cd ${SR_ROOT}
+cd ${SR_DIR}
 git clone https://github.com/doc-ti/selective-reprocessing.git
 
 mkdir flume-input

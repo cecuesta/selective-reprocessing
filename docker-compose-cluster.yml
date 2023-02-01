@@ -164,9 +164,9 @@ services:
     ports:
       - 6627:6627
     volumes:
-      - ${SR_ROOT:-/tmp/selective-reprocessing}/storm/:/tmp/storm
-#      - ${SR_ROOT:-/tmp/selective-reprocessing}/storm/topology.properties:/tmp/topology.properties
-#      - ${SR_ROOT:-/tmp/selective-reprocessing}/storm/topology.properties:/tmp/topology.properties
+      - ${SR_DIR:-/tmp/selective-reprocessing}/storm/:/tmp/storm
+#      - ${SR_DIR:-/tmp/selective-reprocessing}/storm/topology.properties:/tmp/topology.properties
+#      - ${SR_DIR:-/tmp/selective-reprocessing}/storm/topology.properties:/tmp/topology.properties
     networks:
       - net_testing_env
 
@@ -245,11 +245,11 @@ services:
     hostname: flume
     restart: always
     volumes:
-      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/flume.conf:/opt/flume-config/flume.conf
-      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/log4j.properties:/opt/flume-config/log4j.properties
-      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/plugin-flume-1.0.0.jar:/opt/flume/lib/plugin-flume-1.0.0.jar
-      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-conf/mysql-connector-java-8.0.15.jar:/opt/flume/lib/mysql-connector-java-8.0.15.jar
-      - ${SR_ROOT:-/tmp/selective-reprocessing}/flume-input:/tmp/flume-input
+      - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/flume.conf:/opt/flume-config/flume.conf
+      - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/log4j.properties:/opt/flume-config/log4j.properties
+      - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/plugin-flume-1.0.0.jar:/opt/flume/lib/plugin-flume-1.0.0.jar
+      - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/mysql-connector-java-8.0.15.jar:/opt/flume/lib/mysql-connector-java-8.0.15.jar
+      - ${SR_DIR:-/tmp/selective-reprocessing}/flume-input:/tmp/flume-input
     environment:
       - FLUME_AGENT_NAME=docker
     networks:
