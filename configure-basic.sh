@@ -47,9 +47,20 @@ else
    echo storm code created
 fi
 
+cd ${SR_DIR}/java-gendata
+mvn clean install assembly:single -Dmaven.wagon.http.ssl.insecure=true
+
+if [ "$?" -ne 0 ] ; then
+   echo Exiting ....
+   exit
+else
+   echo storm code created
+fi
+
 cd ${SR_DIR}
 ln -s ../java-flume/target/plugin-flume-1.0.0.jar flume-conf/
-ln -s ../java-storm/target/storm-test-1.2.2-dep.jar storm/
+ln -s ../java-gendata/target/file-generator-1.0.0-dep.jar flume-conf/
+ln -s ../java-storm/target/sr-storm-1.0.0-dep.jar storm-conf/
 
 cd ${SR_DIR}/flume-conf
 ln -s flume-single.conf flume.conf
