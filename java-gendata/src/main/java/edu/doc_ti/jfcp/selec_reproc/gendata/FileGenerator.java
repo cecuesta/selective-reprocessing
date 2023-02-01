@@ -84,14 +84,14 @@ public class FileGenerator {
 
 		if ( cmd.hasOption('m')  ) {
 			try {
-				maxFiles = Integer.parseInt(cmd.getParsedOptionValue("n").toString());
+				maxFiles = Integer.parseInt(cmd.getParsedOptionValue("m").toString());
 			} catch (Exception e) {
 			}
 		} 
 
 		if ( cmd.hasOption('p')  ) {
 			try {
-				path = cmd.getParsedOptionValue("numrecords").toString();
+				path = cmd.getParsedOptionValue("path").toString();
 			} catch (Exception e) {}
 		} 
 
@@ -156,7 +156,7 @@ public class FileGenerator {
 				}
 				printed += numToPrint ;
 				
-				String data = getData(numToPrint) ;
+				String data = getData(numToPrint).replaceAll("\"", "") ;
 				bfout.write( data.getBytes() );
 			}
 			bfout.close();
