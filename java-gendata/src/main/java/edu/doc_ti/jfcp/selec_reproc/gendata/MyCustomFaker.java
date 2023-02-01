@@ -1,4 +1,4 @@
-package es.urj.doc_ti.jfcp.selec_reproc.gendata;
+package edu.doc_ti.jfcp.selec_reproc.gendata;
 
 import net.datafaker.providers.base.BaseFaker;
 

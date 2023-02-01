@@ -1,9 +1,8 @@
 
-package es.urj.doc_ti.jfcp.selec_reproc.gendata ;
+package edu.doc_ti.jfcp.selec_reproc.gendata ;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
