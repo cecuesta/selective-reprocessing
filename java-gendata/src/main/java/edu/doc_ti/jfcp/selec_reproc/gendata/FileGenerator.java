@@ -4,7 +4,6 @@ package edu.doc_ti.jfcp.selec_reproc.gendata ;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -114,8 +113,7 @@ public class FileGenerator {
 				long tnext = System.currentTimeMillis()  + 60000 / speed ;
 				if ( !cmd.hasOption('d')  ) {
 					tsFrom = new Date() ;
-					tsTo = new Date( tsFrom.getTime() + 60000/speed );
-					
+					tsTo = new Date( tsFrom.getTime() + 60000/speed - 100);
 				}
 				
 				filename = "data_" + sdfFileName.format(new Date() ) + "_" + String.format( "%06d", counter); ;
@@ -124,16 +122,9 @@ public class FileGenerator {
 				while ( System.currentTimeMillis() < tnext) {
 					try {
 						Thread.sleep(20);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					} catch (InterruptedException e) {}
 				}
-				
-				
 			}
-			
-			
 		} else {
 			
 			filename = "data_" + sdfFileName.format(new Date() ) ;
@@ -165,21 +156,12 @@ public class FileGenerator {
 				}
 				printed += numToPrint ;
 				
-//				System.out.println (numToPrint + " / " + printed ) ;
-	
 				String data = getData(numToPrint) ;
-				
-				try {
-					bfout.write( data.getBytes() );
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				bfout.write( data.getBytes() );
 			}
 			bfout.close();
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println () ;
 		}
