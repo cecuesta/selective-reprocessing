@@ -177,6 +177,7 @@ private static RestHighLevelClient getRestHighLevelClient(Map props ) {
 		LOG.info("ELASTICSEARCH: Batch Concurrent requests: {}", numConcurrentRequests) ;
 		
 
+		@SuppressWarnings("unused")
 		String list = (String) props.get(Constants.K_ELK_HOST) ;
 		
 		

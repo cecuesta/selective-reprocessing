@@ -82,6 +82,7 @@
 <include>joda-time:joda-time</include>
 <include>commons-logging:commons-logging</include>
 <include>commons-codec:commons-codec</include>
+<include>com.google.guava:guava</include>
 </includes>
     </dependencySet>
   </dependencySets>

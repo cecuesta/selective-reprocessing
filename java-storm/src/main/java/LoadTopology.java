@@ -26,6 +26,7 @@ import edu.doc_ti.jfcp.selec_reproc.utils.Constants;
  * This example sets up 3 topologies to put data in Kafka via the KafkaBolt,
  * and shows how to set up a topology that reads from some Kafka topics using the KafkaSpout.
  */
+@SuppressWarnings("unused")
 public class LoadTopology {
 
     private static String TOPIC_NAME = "topic_data" ;
