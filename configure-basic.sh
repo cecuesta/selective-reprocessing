@@ -10,7 +10,7 @@ if [ -e docker-compose.yml ] ; then
   rm docker-compose.yml
 fi
 
-ln docker-compose-basic.yml docker-compose.yml
+ln -s docker-compose-basic.yml docker-compose.yml
 if [ "$?" -ne 0 ] ; then
    echo Exiting .... 
    exit
