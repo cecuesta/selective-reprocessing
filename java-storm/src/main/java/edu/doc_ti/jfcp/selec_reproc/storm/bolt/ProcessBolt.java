@@ -30,7 +30,7 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -54,7 +54,7 @@ public class ProcessBolt extends BaseRichBolt {
 		mapper = new ObjectMapper();
 		typeRef = new TypeReference<Map<String, String>>(){} ;    }
 
-    long newLogAt = 0 ;
+    long newLogAt = System.currentTimeMillis() ;
     
     @Override
     public void execute(Tuple tuple) {
