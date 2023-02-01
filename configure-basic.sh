@@ -6,16 +6,9 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 cd $SCRIPT_DIR
 
-
-rm docker-compose.yml
-
-if [ "$?" -ne 0 ] ; then
-   echo Exiting .... 
-   exit
-else
-   echo Link docker-compose.yml removed
+if [ -e docker-compose.yml ] ; then
+  rm docker-compose.yml
 fi
-
 
 ln docker-compose-basic.yml docker-compose.yml
 if [ "$?" -ne 0 ] ; then
@@ -77,6 +70,14 @@ fi
 
 docker stop flume
 docker start flume
+
+docker exec -it mysql mysql << EOF 
+CREATE database mydatabase ;
+CREATE USER 'myuser'@'%' IDENTIFIED BY 'rootpass';
+GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES ;
+EOF
+
 
 docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_data --replication-factor 1 --partitions 6
 

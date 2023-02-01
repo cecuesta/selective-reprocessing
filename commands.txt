@@ -75,9 +75,9 @@ docker exec -it supervisor storm kill topology-load-data -w 5
 
 docker exec -it supervisor bash
 
-FILE_LOG=$(docker exec -it supervisor find /logs/workers-artifacts/ -name worker.log | sed -e s/\r//)
-echo $FILE_LOG
-docker exec -it supervisor tail -f $FILE_LOG
+docker exec -it supervisor find /logs/workers-artifacts/ -name worker.log 
+docker exec -it supervisor tail 
 
-java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator
+docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input
+
 

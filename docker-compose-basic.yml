@@ -130,4 +130,8 @@ services:
       - FLUME_AGENT_NAME=docker
     networks:
       - net_testing_env
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
 
