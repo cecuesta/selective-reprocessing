@@ -45,7 +45,8 @@ public class ProcessBolt extends BaseRichBolt {
 	protected static final Logger LOG = LoggerFactory.getLogger(ProcessBolt.class);
     private OutputCollector collector;
     private ObjectMapper mapper  ;
-    private TypeReference<Map<String, String>> typeRef  ;
+    @SuppressWarnings("unused")
+	private TypeReference<Map<String, String>> typeRef  ;
 
     
     @Override

@@ -35,8 +35,10 @@ public class CDRData {
     	String[] dataArray = splitData(rawData.toString());
 
 		
-		getCdrData().put(Constants.PROCESSINGDATE, System.currentTimeMillis() ) ; 
-		getCdrData().put(Constants.TIMESTAMP, "");
+		getCdrData().put(Constants.PROCESSINGDATE, System.currentTimeMillis() ) ;
+		if ( dataArray.length >= 25 ) {
+			getCdrData().put(Constants.TIMESTAMP, dataArray[24]);
+		}
 
 		
 		for ( int index = 0 ; index < dataArray.length; index++) {

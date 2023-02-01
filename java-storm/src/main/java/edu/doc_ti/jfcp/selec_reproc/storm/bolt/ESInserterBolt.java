@@ -57,6 +57,7 @@ public class ESInserterBolt extends BaseRichBolt{
 	
 	public ESInserterBolt() {}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(Tuple tuple) {
 				
