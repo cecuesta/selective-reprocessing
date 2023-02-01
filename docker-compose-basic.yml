@@ -75,8 +75,8 @@ services:
       - zookeeper
     restart: always
     volumes:
-      - /root/selective-reprocessing/storm/mirador-storm-v2-3.6.0-dep.jar:/tmp/storm-test-1.2.2-dep.jar
-      - /root/selective-reprocessing/storm/topology.properties:/tmp/topology.properties
+      - ${SR_DIR:-/tmp/selective-reprocessing}/storm-conf/sr-storm-1.0.0-dep.jar:/tmp/sr-storm-1.0.0-dep.jar
+      - ${SR_DIR:-/tmp/selective-reprocessing}/storm-conf/topology-single.properties:/tmp/topology-single.properties
     networks:
       - net_testing_env
 
