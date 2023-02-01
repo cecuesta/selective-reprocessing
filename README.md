@@ -23,3 +23,11 @@
 #
 # to configure a clustered enviroment execute configure-cluster.sh
 #
+#
+# 3 java projects are built locally, so many dependencies had to be downloaded
+#
+# - storm code to process data
+# - flume pluging to process files and to insert into mysql
+# - random file generator to simulate the process
+#
+#

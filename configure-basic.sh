@@ -75,6 +75,9 @@ else
    echo docker environment complete
 fi
 
+docker stop flume
+docker start flume
+
 docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_data --replication-factor 1 --partitions 6
 
 

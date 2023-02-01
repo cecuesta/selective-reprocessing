@@ -75,8 +75,8 @@ services:
       - zookeeper
     restart: always
     volumes:
-      - ${SR_DIR:-/tmp/selective-reprocessing}/storm-conf/sr-storm-1.0.0-dep.jar:/tmp/sr-storm-1.0.0-dep.jar
       - ${SR_DIR:-/tmp/selective-reprocessing}/storm-conf/topology-single.properties:/tmp/topology-single.properties
+      - ${SR_DIR:-/tmp/selective-reprocessing}/storm-conf/sr-storm-1.0.0-dep.jar:/tmp/sr-storm-1.0.0-dep.jar
     networks:
       - net_testing_env
 
@@ -107,6 +107,10 @@ services:
       - 3306:3306
     networks:
       - net_testing_env
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   flume:
     image: probablyfine/flume:2.0.0

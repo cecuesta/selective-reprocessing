@@ -38,7 +38,6 @@ ln -s ../java-storm/target/storm-test-1.2.2-dep.jar storm/
 cd ${SR_DIR}
 docker-compose up -d
 
-
 docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_test
 docker exec -it kafka01 kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_data --replication-factor 2 --partitions 12
 
@@ -71,10 +70,14 @@ docker exec -it kafka kafka-console-consumer.sh --bootstrap-server kafka:9092 --
 
 docker exec -it mysql mysql -u root -prootpass -e "select * from info_files;" mydatabase 
 
-docker exec -it supervisor storm jar /tmp/storm-test-1.2.2-dep.jar LoadTopology /tmp/topology.properties topology-load-data
-docker exec -it supervisor storm kill  topology-load-data -w 5
+docker exec -it supervisor storm jar /tmp/sr-storm-1.0.0-dep.jar LoadTopology /tmp/topology-single.properties topology-load-data
+docker exec -it supervisor storm kill topology-load-data -w 5
 
 docker exec -it supervisor bash
 
+FILE_LOG=$(docker exec -it supervisor find /logs/workers-artifacts/ -name worker.log | sed -e s/\r//)
+echo $FILE_LOG
+docker exec -it supervisor tail -f $FILE_LOG
 
+java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator
 
