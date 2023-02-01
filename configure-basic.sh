@@ -53,6 +53,10 @@ cd ${SR_DIR}
 ln -s ../java-flume/target/plugin-flume-1.0.0.jar flume-conf/
 ln -s ../java-storm/target/storm-test-1.2.2-dep.jar storm/
 
+cd ${SR_DIR}/flume-conf
+ln -s flume-single.conf flume.conf
+
+
 cd ${SR_DIR}
 docker-compose up -d
 
