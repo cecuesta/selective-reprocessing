@@ -27,8 +27,6 @@ fi
 
 export SR_DIR=${SCRIPT_DIR}
 
-mkdir flume-input
-
 cd ${SR_DIR}/java-flume
 mvn clean install -Dmaven.wagon.http.ssl.insecure=true
 
@@ -56,7 +54,6 @@ ln -s ../java-storm/target/storm-test-1.2.2-dep.jar storm/
 cd ${SR_DIR}/flume-conf
 ln -s flume-single.conf flume.conf
 
-
 cd ${SR_DIR}
 docker-compose up -d
 
@@ -67,6 +64,6 @@ else
    echo docker environment complete
 fi
 
-docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_data --replication-factor 2 --partitions 12
+docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_data --replication-factor 1 --partitions 6
 
 
