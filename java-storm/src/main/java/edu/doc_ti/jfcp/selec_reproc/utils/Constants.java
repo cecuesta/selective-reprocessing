@@ -15,7 +15,7 @@ public final class Constants {
 	public final static String HDFS_BOLT_ID = "hdfsInsertBolt";
 	public final static String KAFKA_OUT_DEFAULT_BOLT_ID = "aggregate";
 	
-	public final static String DELIMITER = ",";
+	public final static String DELIMITER = ";";
 	
 	public final static String ERROR = "error_data";
 	public final static String ERROR_VALUE = "invalid_data";
