@@ -68,8 +68,13 @@ else
    echo docker environment complete
 fi
 
-docker stop flume
-docker start flume
+
+echo "Waiting 20 seconds to mysql to boot"
+for NN in $(seq 1 20)
+do
+  echo $NN ...
+  sleep 1
+done
 
 for CRED in "" "-u root -prootpass "
 do
@@ -78,6 +83,9 @@ do
   docker exec -it mysql mysql $CRED -e "GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' WITH GRANT OPTION;"  
   docker exec -it mysql mysql $CRED -e "FLUSH PRIVILEGES ;"
 done
+
+docker stop flume
+docker start flume
 
 
 docker exec -it mysql mysql -u myuser -prootpass -e "show databases;" 

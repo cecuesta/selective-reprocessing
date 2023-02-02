@@ -1,11 +1,11 @@
 
 ## CENTOS 
-#yum -y install git java maven yum-utils
-#yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum -y install git java maven yum-utils
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 #yum-config-manager --add-repo  https://download.docker.com/linux/rhel/docker-ce.repo
-#yum -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-#ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/
-#systemctl start docker
+yum -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/
+systemctl start docker
 
 ## UBUNTU
 #apt-get update
