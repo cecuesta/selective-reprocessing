@@ -83,7 +83,7 @@ services:
     container_name: elasticsearch01
     hostname: elasticsearch01
     ports:
-      - '9200:9200'
+      - '19200:9200'
     environment:
       node.name: esnode_01
       discovery.seed_hosts: elasticsearch02,elastisearch03
@@ -164,9 +164,8 @@ services:
     ports:
       - 6627:6627
     volumes:
-      - ${SR_DIR:-/tmp/selective-reprocessing}/storm/:/tmp/storm
-#      - ${SR_DIR:-/tmp/selective-reprocessing}/storm/topology.properties:/tmp/topology.properties
-#      - ${SR_DIR:-/tmp/selective-reprocessing}/storm/topology.properties:/tmp/topology.properties
+      - ${SR_DIR:-/tmp/selective-reprocessing}/storm-conf/topology-cluster.properties:/tmp/topology-cluster.properties
+      - ${SR_DIR:-/tmp/selective-reprocessing}/storm-conf/sr-storm-1.0.0-dep.jar:/tmp/sr-storm-1.0.0-dep.jar
     networks:
       - net_testing_env
 
@@ -228,6 +227,10 @@ services:
       - 3306:3306
     networks:
       - net_testing_env
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   adminer:
     image: adminer
@@ -249,9 +252,15 @@ services:
       - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/log4j.properties:/opt/flume-config/log4j.properties
       - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/plugin-flume-1.0.0.jar:/opt/flume/lib/plugin-flume-1.0.0.jar
       - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/mysql-connector-java-8.0.15.jar:/opt/flume/lib/mysql-connector-java-8.0.15.jar
+      - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/file-generator-1.0.0-dep.jar:/tmp/file-generator-1.0.0-dep.jar
       - ${SR_DIR:-/tmp/selective-reprocessing}/flume-input:/tmp/flume-input
+    depends_on:
+      - mysql
     environment:
       - FLUME_AGENT_NAME=docker
     networks:
       - net_testing_env
-
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536

@@ -8,12 +8,17 @@ ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/
 systemctl start docker
 
 ## UBUNTU
-#apt-get update
-apt-get install git
-#apt-get install jdk*
-#apt-get install maven
+apt-get -y update
+apt-get -y install git
+#apt-get -y install jdk*
+apt-get -y install openjdk-8-jdk-headless
+apt-get -y install maven
 #update-alternatives --config java
-#apt install docker*
+apt -y install docker*
+
+apt-get -y install git openjdk-8-jdk-headless maven docker*
+apt-get -y update
+systemctl start docker
 
 #usermod -a -G docker <user>
 
@@ -78,7 +83,7 @@ docker exec -it supervisor bash
 docker exec -it supervisor find /logs/workers-artifacts/ -name worker.log 
 docker exec -it supervisor tail 
 
-docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input -s 12 -m 6
+docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input -s 5 -m 6
 
 curl "localhost:19200/index-data/_search?pretty&size=0&track_total_hits=true"
 
