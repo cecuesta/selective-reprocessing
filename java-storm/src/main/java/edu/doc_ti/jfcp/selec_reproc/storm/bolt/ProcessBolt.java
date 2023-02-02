@@ -57,6 +57,8 @@ public class ProcessBolt extends BaseRichBolt {
 
     long newLogAt = System.currentTimeMillis() ;
     
+    
+    long count = 0 ; 
     @Override
     public void execute(Tuple tuple) {
 
@@ -69,16 +71,16 @@ public class ProcessBolt extends BaseRichBolt {
     	
     	try {
     		
+    		count++ ;
     		CDRData cdr = new CDRData( tuple.getValue(0).toString() ) ;
 	        String jsonData = "{ \"campo1\"  : \"dato1\", \"ts\" : " + System.currentTimeMillis() + " }" ;
 
-	        
-	        
 	        jsonData = mapper.writeValueAsString(cdr.getCdrData()) ;
 
 	        if ( inLog ) {
 	        	LOG.info("hashMap: " + cdr.getCdrData() );
 	        	LOG.info("json: " + jsonData);
+	        	LOG.info("Records processed: " + count + " ---------------- ");
 	        }
 	        
 			collector.emit(tuple ,  new Values("index-data", jsonData) ) ;
