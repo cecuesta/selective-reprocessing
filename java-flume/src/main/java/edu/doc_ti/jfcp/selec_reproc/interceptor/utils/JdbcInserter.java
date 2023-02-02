@@ -28,7 +28,7 @@ public class JdbcInserter {
 
 	        Statement stmt = conn.createStatement();
 			try {
-				stmt.execute ("create table info_files ( filename varchar(200), status varchar(20), records int, ts_insert timestamp, ts_check timestamp  DEFAULT '2000-01-01 00:00:00' ) ") ;
+				stmt.execute ("create table info_files ( filename varchar(200), status varchar(20), records int, ts_insert timestamp, ts_check timestamp  DEFAULT '2000-01-01 00:00:00', records_es int ) ") ;
 			} catch (SQLException e) {
 				LOG.error("FELIPE" );
 				LOG.error(e.getMessage() );
