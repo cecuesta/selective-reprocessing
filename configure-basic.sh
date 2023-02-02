@@ -71,20 +71,16 @@ fi
 docker stop flume
 docker start flume
 
-docker exec -it mysql mysql << EOF 
-CREATE database mydatabase ;
-CREATE USER 'myuser'@'%' IDENTIFIED BY 'rootpass';
-GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES ;
-EOF
+for CRED in "" "-u root -prootpass "
+do
+  docker exec -it mysql mysql $CRED -e "CREATE database mydatabase ; "
+  docker exec -it mysql mysql $CRED -e "CREATE USER 'myuser'@'%' IDENTIFIED BY 'rootpass';"
+  docker exec -it mysql mysql $CRED -e "GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' WITH GRANT OPTION;"  
+  docker exec -it mysql mysql $CRED -e "FLUSH PRIVILEGES ;"
+done
 
-docker exec -it mysql mysql -u root -prootpass << EOF
-CREATE database mydatabase ;
-CREATE USER 'myuser'@'%' IDENTIFIED BY 'rootpass';
-GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES ;
-EOF
 
+docker exec -it mysql mysql -u myuser -prootpass -e "show databases;" 
 
 docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_data --replication-factor 1 --partitions 6
 
