@@ -78,6 +78,7 @@ docker exec -it supervisor bash
 docker exec -it supervisor find /logs/workers-artifacts/ -name worker.log 
 docker exec -it supervisor tail 
 
-docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input
+docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input -s 12 -m 6
 
+curl "localhost:19200/index-data/_search?pretty&size=0&track_total_hits=true"
 

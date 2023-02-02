@@ -78,7 +78,16 @@ GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES ;
 EOF
 
+docker exec -it mysql mysql -u root -prootpass << EOF
+CREATE database mydatabase ;
+CREATE USER 'myuser'@'%' IDENTIFIED BY 'rootpass';
+GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES ;
+EOF
+
 
 docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_data --replication-factor 1 --partitions 6
+
+docker exec -it supervisor storm jar /tmp/sr-storm-1.0.0-dep.jar LoadTopology /tmp/topology-single.properties topology-load-data
 
 
