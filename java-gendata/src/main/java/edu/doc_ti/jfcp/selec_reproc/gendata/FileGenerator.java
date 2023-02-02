@@ -40,7 +40,7 @@ public class FileGenerator {
 		
 		options.addOption(new Option("h", "help", false, "Print this help"));
 		options.addOption(new Option("d", "date", true, "Date for the input data, format [yyyy-mm-dd]"));
-		options.addOption(new Option("s", "speed", true, "Number of files per minute (must be <=60)"));
+		options.addOption(new Option("s", "seconds", true, "Generate a file every s seconds (default 30)"));
 		options.addOption(new Option("n", "numrecords", true, "Number of records in file (default 5000)"));
 		options.addOption(new Option("m", "maxfiles", true, "Numeber of files to generate (default 20)"));
 		options.addOption(new Option("p", "path", true, "Path to write the file"));
@@ -97,23 +97,23 @@ public class FileGenerator {
 
 		String filename = "" ;
 		if ( cmd.hasOption('s')  ) {
-			int speed = 1 ;
+			int seconds = 30 ;
 			try {
-				speed = Integer.parseInt(cmd.getParsedOptionValue("speed").toString());
+				seconds = Integer.parseInt(cmd.getParsedOptionValue("seconds").toString());
 			} catch (Exception e) {}
 			
-			if ( speed > 60 ) {
-				speed = 60 ;
+			if ( seconds < 1 ) {
+				seconds = 1 ;
 			}
 			
 			int counter = 0 ;
 			while ( counter < maxFiles )  {
 				
 				counter++ ;
-				long tnext = System.currentTimeMillis()  + 60000 / speed ;
+				long tnext = System.currentTimeMillis()  + 1000*seconds ;
 				if ( !cmd.hasOption('d')  ) {
 					tsFrom = new Date() ;
-					tsTo = new Date( tsFrom.getTime() + 60000/speed - 100);
+					tsTo = new Date( tsFrom.getTime() + 1000*seconds - 100);
 				}
 				
 				filename = "data_" + sdfFileName.format(new Date() ) + "_" + String.format( "%06d", counter); ;
