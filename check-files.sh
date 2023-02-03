@@ -25,7 +25,7 @@ do
   STATUS=OK
   if [ "$NUM_RECS" -ne "$NUM_RECS_IN_ES" ]; then STATUS=KO ; fi
 
-  QUERY_UPD="update info_files set status = '$STATUS',  records_es = $NUM_RECS_IN_ES where filename = '$DATAFILE'"
+  QUERY_UPD="update info_files set status = '$STATUS',  records_es = $NUM_RECS_IN_ES, ts_check = sysdate where filename = '$DATAFILE'"
 
 #  echo $QUERY_UPD
 
