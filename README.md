@@ -41,7 +41,7 @@
  - Kafka (3 in cluster environment)
  - Apache Storm Nimbus
  - Apache Storm UI
- - Apache Storm Supervisor (3 in cluster environment)
+ - Apache Storm Supervisor (2 in cluster environment)
  - Mysql
  - Flume
  - Elasticsearch (3 in cluster environment)
