@@ -1,7 +1,7 @@
 
 # Selective reprocessing mechanism testing enviroment
-i
-## Purpouse
+
+## Purpose
 
  This is the software to configure a testing enviroment for the selective reprocessing mechanism
  The enviroment is built with dockers, and there are 2 possible options: 
