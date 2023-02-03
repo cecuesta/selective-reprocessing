@@ -19,6 +19,8 @@
  - git version 1.8.3.1 or greater
 
  this enviroment has been tested in Centos 7,8,9 and Ubuntu 20.4, 22.4
+ 
+Use of a virtual machine is recommended. We have used a VM with 8 cores, 16 GB RAM, 160 GB HDD for testing
 
 ## Configuration
  first step should be clone github repository with following command:
