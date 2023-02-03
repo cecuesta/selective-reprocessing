@@ -34,7 +34,7 @@ do
 done
 
 echo Actual data -----------------------------------------------------------------
-docker exec -it mysql mysql -u myuser -prootpass -e "select * from info_files" mydatabase 2>/dev/null
+docker exec -it mysql mysql -u myuser -prootpass -e "select * from info_files order by ts_insert desc" mydatabase 2>/dev/null
 
 rm $FILE_TMP
 
