@@ -2,7 +2,7 @@ FILE_TMP=/tmp/data.$$.tmp
 
 ESHOST=localhost:19200
 
-docker exec -it mysql mysql -u myuser -prootpass -e "select status, filename, records from info_files where status = 'PENDING' and ts_insert <  date_sub(sysdate(), interval 5 minute) ;" mydatabase | grep PENDING | sed -e "s/ //g"   > $FILE_TMP
+docker exec -it mysql mysql -u myuser -prootpass -e "select status, filename, records from info_files where status = 'PENDING' and ts_insert <  date_sub(sysdate(), interval 1 minute) ;" mydatabase | grep PENDING | sed -e "s/ //g"   > $FILE_TMP
 
 echo  DATA TO CHECK ---------------------------------------------
 cat $FILE_TMP
@@ -25,7 +25,7 @@ do
   STATUS=OK
   if [ "$NUM_RECS" -ne "$NUM_RECS_IN_ES" ]; then STATUS=KO ; fi
 
-  QUERY_UPD="update info_files set status = '$STATUS',  records_es = $NUM_RECS_IN_ES, ts_check = sysdate where filename = '$DATAFILE'"
+  QUERY_UPD="update info_files set status = '$STATUS',  records_es = $NUM_RECS_IN_ES, ts_check = sysdate() where filename = '$DATAFILE'"
 
 #  echo $QUERY_UPD
 
