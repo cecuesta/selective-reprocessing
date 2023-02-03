@@ -94,5 +94,7 @@ apt-get -y update
 
 apt-get -y install git openjdk-8-jdk-headless maven docker*
 
+sysctl -w vm.max_map_count=262144 # configuration needed for Elasticsearch
+
 systemctl start docker
 
