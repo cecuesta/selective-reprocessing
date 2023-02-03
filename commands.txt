@@ -1,4 +1,11 @@
 
+
+#####
+##### THIS IS AN INTERNAL FILE TO KEEP TRACK OF USEFUL COMMANDS
+#####
+
+
+
 ## CENTOS 
 yum -y install git java maven yum-utils
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
