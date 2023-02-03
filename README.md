@@ -53,7 +53,16 @@
 #
 ##########################################################################################
 #
-# In a clean enviroment these are the commands needed to install the needed tools
+# Single configuration for dockers is more likely to work properly as it is more simple
+# Elasticsearch in cluster need some configuration at OS level, so docker startup could fail
+# if OS is not properly configured for elasticsearch
+# Additional information can be found on : https://www.elastic.co/guide/en/elasticsearch/reference/7.9/bootstrap-checks.html
+#
+##########################################################################################
+#
+# In a clean enviroment these are the commands needed to install the tools
+# and something extra for some environments
+#
 #
 ## CentOS / Red Hat:
 
@@ -61,11 +70,13 @@ yum -y install git java maven yum-utils
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 yum -y install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/
+sysctl -w vm.max_map_count=262144 # configuration needed for Elasticsearch
 systemctl start docker
+
    
 # Ubuntu:
 
-apt-get -y install git openjdk-8-jdk-headless maven docker*
 apt-get -y update
+apt-get -y install git openjdk-8-jdk-headless maven docker*
 systemctl start docker
 

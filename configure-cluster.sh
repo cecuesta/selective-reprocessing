@@ -92,7 +92,7 @@ docker start flume
 
 docker exec -it mysql mysql -u myuser -prootpass -e "show databases;" 
 
-docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_data --replication-factor 3 --partitions 12
+docker exec -it kafka01 kafka-topics.sh --bootstrap-server localhost:9092 --create --topic topic_data --replication-factor 3 --partitions 12
 
 docker exec -it nimbus storm jar /tmp/sr-storm-1.0.0-dep.jar LoadTopology /tmp/topology-cluster.properties topology-load-data
 
