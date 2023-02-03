@@ -71,8 +71,8 @@ else
 fi
 
 
-echo "Waiting 20 seconds to mysql to boot"
-for NN in $(seq 1 20)
+echo "Waiting 30 seconds to mysql to boot properly"
+for NN in $(seq 1 30)
 do
   echo $NN ...
   sleep 1
