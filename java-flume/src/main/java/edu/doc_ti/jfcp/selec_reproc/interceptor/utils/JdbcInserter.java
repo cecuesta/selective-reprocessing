@@ -28,7 +28,7 @@ public class JdbcInserter {
 
 	        Statement stmt = conn.createStatement();
 			try {
-				stmt.execute ("create table info_files ( filename varchar(200), status varchar(20), records int, ts_insert timestamp, ts_check timestamp  DEFAULT '2000-01-01 00:00:00', records_es int ) ") ;
+				stmt.execute ("create table info_files ( filename varchar(200), status varchar(20), records int, sum_lines_records int, ts_insert timestamp, ts_check timestamp  DEFAULT '2000-01-01 00:00:00', records_es int ) ") ;
 			} catch (SQLException e) {
 				LOG.error("FELIPE" );
 				LOG.error(e.getMessage() );
@@ -38,7 +38,7 @@ public class JdbcInserter {
 			
 	        stmt.close() ;
 	        
-	        pstmt = conn.prepareStatement("insert into info_files (filename, status, records, ts_insert, ts_check) values (?, 'PENDING', ?, sysdate() , null ) ")  ;
+	        pstmt = conn.prepareStatement("insert into info_files (filename, status, records, ts_insert, sum_lines_records, ts_check) values (?, 'PENDING', ?, sysdate() , ?, null ) ")  ;
 
 		} catch (SQLException e) {
 			LOG.error(e.getMessage()) ;
@@ -56,8 +56,11 @@ public class JdbcInserter {
 		
 		try {
 			LOG.info(String.format( "Inserting data for (%s) : (%d)", fr.getFile(), fr.getPosition()))  ;
+			int N = fr.getPosition();
 			pstmt.setString(1, fr.getFile());
-			pstmt.setInt(2, fr.getPosition());
+			pstmt.setInt(2, N);
+			pstmt.setInt(3, N*(N+1)/2);
+
 			pstmt.execute();
 		} catch (SQLException e) {
 			LOG.error(e.getMessage()) ;
