@@ -16,16 +16,29 @@ do
 #  echo $DATAFILE "-" $NUM_REGS
 
   NUM_RECS_IN_ES=$(curl -s "$ESHOST/index-data/_search?pretty&size=0&track_total_hits=true&q=filename:$DATAFILE" | grep total -A1 | tail -1 | sed -e "s/,//g" | awk '{ print $NF ;}')
+  SUM_LINES_IN_ES=$(
+  curl -s -H 'Content-Type: application/json' -XPOST "$ESHOST/index-data/_search?pretty&size=0&track_total_hits=true" -d "
+{ \"query\": { \"bool\": { \"must\": [{\"match_phrase\": { \"filename\": \"$DATAFILE\"}}]}
+  },\"aggs\": { \"sum_num_lines\": {\"sum\": {\"field\": \"line_number\"}}}
+}" | grep sum_num_lines -A1 | tail -1 | sed -e "s/,//g" | awk '{ print $NF ;}'
+
+)
 
 #  echo -${NUM_RECS_IN_ES}-
-#  echo -${NUM_RECS_IN_ES}-
+#  echo -${SUM_LINES_IN_ES}-
 
   if [ "$NUM_RECS_IN_ES" == "" ] ; then NUM_RECS_IN_ES=0 ; fi
+  if [ "$SUM_LINES_IN_ES" == "" ] ; then SUM_LINES_IN_ES=0 ; fi
 
   STATUS=OK
-  if [ "$NUM_RECS" -ne "$NUM_RECS_IN_ES" ]; then STATUS=KO ; fi
+  if [ "$NUM_RECS" -ne "$NUM_RECS_IN_ES" ]; then
+          STATUS=KO ;
+  else
+          RES_CHECK_SUM=$(echo ${SUM_LINES_IN_ES} ${NUM_RECS_IN_ES} | awk '{ if ( $1-$2*($2+1)/2 == 0) print "OK"; else print "KO" }' )
+  fi
 
-  QUERY_UPD="update info_files set status = '$STATUS',  records_es = $NUM_RECS_IN_ES, ts_check = sysdate() where filename = '$DATAFILE'"
+
+  QUERY_UPD="update info_files set status = '$STATUS',  records_es = $NUM_RECS_IN_ES, sum_lines_records_es=${SUM_LINES_IN_ES}, ts_check = sysdate() where filename = '$DATAFILE'"
 
 #  echo $QUERY_UPD
 

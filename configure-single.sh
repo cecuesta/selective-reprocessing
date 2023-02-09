@@ -87,6 +87,27 @@ done
 docker stop flume
 docker start flume
 
+curl -XPUT http://localhost:19200/_template/index_data_tmpl -H 'Content-Type: application/json' -d ' {
+    "order" : 0,
+    "index_patterns" : [
+      "index-data*"
+    ],
+    "mappings" : {
+      "dynamic_templates" : [
+        { "all_integers" : { "mapping" : { "type" : "long" }, "match_mapping_type" : "long" } },
+        { "all_longs" : { "mapping" : { "type" : "long" }, "match_mapping_type" : "long" } },
+        { "all_doubles" : { "mapping" : { "type" : "double" }, "match_mapping_type" : "double" } },
+        { "all_strings" : { "mapping" : { "type" : "keyword" }, "match_mapping_type" : "string" } }
+      ],
+      "properties" : {
+        "line_number" : { "type" : "long" },
+        "filename" : { "type" : "keyword" }
+      }
+    },
+    "aliases" : { }
+}'
+
+
 
 docker exec -it mysql mysql -u myuser -prootpass -e "show databases;" 
 
