@@ -94,6 +94,14 @@ curl -XPUT http://localhost:19200/_template/index_data_tmpl -H 'Content-Type: ap
     "index_patterns" : [
       "index-data*"
     ],
+    "settings" : {
+      "index" : {
+        "codec" : "best_compression",
+        "number_of_shards" : "3",
+        "refresh_interval" : "30s",
+        "number_of_replicas" : "1"
+      }
+    },
     "mappings" : {
       "dynamic_templates" : [
         { "all_integers" : { "mapping" : { "type" : "long" }, "match_mapping_type" : "long" } },
