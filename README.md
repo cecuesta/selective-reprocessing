@@ -60,6 +60,9 @@ Use of a virtual machine is recommended. We have used a VM with 8 cores, 16 GB R
 
 This can be done using the script : check-files.sh
 
+It is possible to generate random errors in the check process, this can be done deleting random records (script **delete-random-records.sh**) or inserting random records (script **insert-random-records.sh**) 
+
+
 ## Warnings in docker creation & configuration
 
  Single configuration for dockers is more likely to work properly as it is more simple
