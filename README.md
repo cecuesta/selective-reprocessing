@@ -51,7 +51,7 @@ Use of a virtual machine is recommended. We have used a VM with 8 cores, 16 GB R
 ## Execution of tests
  Data files are generated with the following command executed in the host enviroment (execute with -h option for more information):
  
- > docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input -s 5 -m 6
+ docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input -s 5 -m 6
 
  File are generated into flume container
  Flume process these files, inserting data into Kafka and metadata info into Mysql
