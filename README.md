@@ -1,6 +1,12 @@
 
 # Selective reprocessing mechanism testing enviroment
 
+# What to reproduce
+
+# Tecnoloy skills and requirements
+
+
+
 ## Purpose
 
  This is the software to configure a testing enviroment for the selective reprocessing mechanism
