@@ -1,21 +1,29 @@
 
 # Selective reprocessing mechanism testing enviroment
 
-# What to reproduce
+## Purpose of this kit
 
-# Tecnoloy skills and requirements
-
-
-
-## Purpose
-
- This is the software to configure a testing enviroment for the selective reprocessing mechanism
+ This is the software to fully configure a testing enviroment for the selective reprocessing mechanism
  The enviroment is built with dockers, and there are 2 possible options: 
  - Tools configured in a non-cluster way
  - Tools configured as a cluster
 
- This docker enviroment is quite complex and it is only configured for testing pourposes
- More exhaustive tests have been done in a full on-premise cluster
+ This docker enviroment is quite complex and it is only configured for testing pourposes. 
+ More exhaustive tests have been performed in a full on-premise cluster
+
+## What to reproduce
+
+With this kit it is possible to create a docker environment with the necesary tools for a real-time big data processing system.
+
+Aditionally to the docker environment several java projects must be compiled.
+
+Once the environment is configured and running, it can be tested.
+
+These tests consist in the generation of random files that are inserted in Kafka, processed with Storm and loaded in Elasticsearch.
+The information of each file is stored in a mysql database as they are inserted in Kafka. Once loaded there is a checking process to verify that the same data from the original file is loaded into Elasticsearch.
+
+If the system is very stressed (high volume of input data, Elasticsearch queries or other situations) there should be load failures that would be detected by this mechanism.
+
 
 ## Requisites
  To execute the test following tools must be installed:
@@ -36,7 +44,8 @@ Use of a virtual machine is recommended. We have used a VM with 8 cores, 16 GB R
  - to configure a clustered enviroment execute: **configure-cluster.sh**
 
 ## Java projects building
- 3 java projects are built locally, many dependencies had to be downloaded
+ 3 java projects are built locally, many dependencies had to be downloaded. 
+ This java built is included in the installation process.
 
  - storm code to process data
  - flume pluging to process files and to insert into mysql
@@ -79,7 +88,7 @@ It is possible to manually generate random errors in the check process, this can
 ## Needed tools instalation
 
  In a clean enviroment these are the commands needed to install the tools
- and something extra for some environments
+ and some extra commands are also provided
 
 
 ### CentOS / Red Hat
