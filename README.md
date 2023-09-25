@@ -19,8 +19,13 @@ Aditionally to the docker environment several java projects must be compiled.
 
 Once the environment is configured and running, it can be tested.
 
-These tests consist in the generation of random files that are inserted in Kafka, processed with Storm and loaded in Elasticsearch.
+Test cover two different scenarios:
+
+1.- Generation of random files that are inserted in Kafka, processed with Storm and loaded in Elasticsearch.
 The information of each file is stored in a mysql database as they are inserted in Kafka. Once loaded there is a checking process to verify that the same data from the original file is loaded into Elasticsearch.
+
+2.- Generation of data directly inserted into kafka. This data stream is processed with Storm and loaded in Elasticsearch.
+The information of the input stream is tagged and stored again in kafka. Tagging groups are stored in a mysql database. Once loaded there is a checking process to verify that the same data from the original kafka stream is loaded into Elasticsearch.
 
 If the system is very stressed (high volume of input data, Elasticsearch queries or other situations) there should be load failures that would be detected by this mechanism.
 
