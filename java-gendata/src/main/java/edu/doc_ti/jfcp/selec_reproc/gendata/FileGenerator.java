@@ -169,7 +169,7 @@ public class FileGenerator {
 		myFile.renameTo(new File(path + "/" + filename)) ;
 	}
 
-	private static String getData(int numToPrint) {
+	public static String getData(int numToPrint) {
         return Format.toCsv(
         		
                 Csv.Column.of("f3",  () -> myFaker.MyElements().nextDeterminedDistribElement("id3")),
