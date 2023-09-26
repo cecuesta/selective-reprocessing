@@ -23,7 +23,7 @@ public class KafkaGenerator {
     public static void main(String[] args) {
         log.info("I am a Kafka Producer");
 
-        int speed = 1000 ;
+        int speed = 10 ;
         String bootstrapServers = "127.0.0.1:9092";
         String topic = "topic_in" ;
         
@@ -120,10 +120,6 @@ public class KafkaGenerator {
             }
 
         }
-        
-        // create a producer record
 
-        // flush and close producer
-//        producer.close();
     }
 }

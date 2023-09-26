@@ -21,7 +21,7 @@ import org.apache.commons.cli.Options;
 @SuppressWarnings("deprecation")
 public class FileGenerator {
 
-	private static String DELIMITER = ";" ;
+	public static String DELIMITER = ";" ;
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	static SimpleDateFormat sdfFileName = new SimpleDateFormat("yyyyMMdd_HHmmss");
 	static SimpleDateFormat sdfNice = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -45,8 +45,7 @@ public class FileGenerator {
 		options.addOption(new Option("m", "maxfiles", true, "Numeber of files to generate (default 20)"));
 		options.addOption(new Option("p", "path", true, "Path to write the file"));
 		
-		
-		
+
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = null ;
 		try {
