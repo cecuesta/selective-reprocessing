@@ -47,8 +47,19 @@ if [ "$?" -ne 0 ] ; then
    echo Exiting ....
    exit
 else
-   echo storm code created
+   echo gendata code created
 fi
+
+cd ${SR_DIR}/java-kafka-streams
+mvn clean install assembly:single -Dmaven.wagon.http.ssl.insecure=true
+
+if [ "$?" -ne 0 ] ; then
+   echo Exiting ....
+   exit
+else
+   echo kafka-streams code created
+fi
+
 
 cd ${SR_DIR}
 ln -s ../java-flume/target/plugin-flume-1.0.0.jar flume-conf/
