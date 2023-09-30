@@ -45,14 +45,14 @@ public class TaggingTopology {
 		String topicIn = "topic_in_stream" ; 
 		String topicOut = "topic_data" ; 
 		String bootstrapServers = "127.0.0.1:9092" ;
-		String defURLmysql = "jdbc:mysql://localhost/mydatabase?user=myuser&password=rootpass" ;
+		String defURLmysql = "jdbc:mysql://mysql/mydatabase?user=myuser&password=rootpass" ;
 		
 		Options options = new Options();
 		options.addOption(new Option("h", "help", false, "Print this help"));
-		options.addOption(new Option("n", "numrecords", true, "Make a different tag every N records (def: 10000)"));
-		options.addOption(new Option("b", "broker", true, "List of kafka bootstrap servers (def: 127.0.0.1:9092)"));
-		options.addOption(new Option("i", "topic_in", true, "Input topic name (default: topic_in_stream)"));
-		options.addOption(new Option("o", "topic_out", true, "Output topic name (default: topic_data)"));
+		options.addOption(new Option("n", "numrecords", true, "Make a different tag every N records (def: " + numRecords + ")"));
+		options.addOption(new Option("b", "broker", true, "List of kafka bootstrap servers (def: " + bootstrapServers + ")"));
+		options.addOption(new Option("i", "topic_in", true, "Input topic name (default: " + topicIn + ")"));
+		options.addOption(new Option("o", "topic_out", true, "Output topic name (default: " + topicOut + ")"));
 		options.addOption(new Option("u", "mysqlurl", true, "URL for mysql (default: '" + defURLmysql + "')"));
     	
     	

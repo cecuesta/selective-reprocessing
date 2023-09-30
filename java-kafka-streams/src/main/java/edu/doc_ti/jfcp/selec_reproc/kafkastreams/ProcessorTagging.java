@@ -4,17 +4,20 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.kafka.streams.processor.api.Processor;
 import org.apache.kafka.streams.processor.api.ProcessorContext;
 import org.apache.kafka.streams.processor.api.Record;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProcessorTagging implements Processor<String, String, String, String> {
+	private static final Logger LOG = LoggerFactory.getLogger(ProcessorTagging.class);
 
     ProcessorContext<String, String> _context ;
     
 //    String baseID = UUID.randomUUID().toString() ;
-    String baseID = RandomStringUtils.randomAlphanumeric(12) ;
+    String baseID = "str_" + RandomStringUtils.randomAlphanumeric(12) ;
     
     int counterTags = 1 ;
     int counterRecords = 0 ;
-    String currentTag = baseID + "-" + Integer.toString(counterTags) ;
+    String currentTag = baseID + "_" + Integer.toString(counterTags) ;
    
 	@Override
     public void init(final ProcessorContext<String, String> context) {
@@ -53,14 +56,14 @@ public class ProcessorTagging implements Processor<String, String, String, Strin
 
     private void closeTag() {
 
-    	System.out.println( "closeing TAG " + currentTag + " with " + counterRecords );
+    	LOG.info( "closing TAG " + currentTag + " with " + counterRecords );
     	
     	TaggingTopology.mysqlIns.insert(currentTag, counterRecords);
     	
     	// FALTA MANDAR a MYSQL
     	counterRecords = 0 ;
     	counterTags++ ;
-    	currentTag = baseID + "-" + Integer.toString(counterTags) ;
+    	currentTag = baseID + "_" + Integer.toString(counterTags) ;
 	}
 
 	@Override

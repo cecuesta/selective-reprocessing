@@ -15,7 +15,6 @@ public class JdbcInserter {
 	Connection conn;
 	private PreparedStatement pstmt;
 	
-	
 	public JdbcInserter (String jdbcUrl) {
 		
 		try { Class.forName("com.mysql.jdbc.Driver"); } catch (ClassNotFoundException e)
