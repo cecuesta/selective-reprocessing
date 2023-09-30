@@ -1,7 +1,6 @@
 package edu.doc_ti.jfcp.selec_reproc.kafkastreams;
 
-import java.util.UUID;
-
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.kafka.streams.processor.api.Processor;
 import org.apache.kafka.streams.processor.api.ProcessorContext;
 import org.apache.kafka.streams.processor.api.Record;
@@ -10,7 +9,9 @@ public class ProcessorTagging implements Processor<String, String, String, Strin
 
     ProcessorContext<String, String> _context ;
     
-    String baseID = UUID.randomUUID().toString() ;
+//    String baseID = UUID.randomUUID().toString() ;
+    String baseID = RandomStringUtils.randomAlphanumeric(12) ;
+    
     int counterTags = 1 ;
     int counterRecords = 0 ;
     String currentTag = baseID + "-" + Integer.toString(counterTags) ;
