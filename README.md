@@ -21,11 +21,11 @@ Once the environment is configured and running, it can be tested.
 
 Test cover two different scenarios:
 
-1.- Generation of random files that are inserted in Kafka, processed with Storm and loaded in Elasticsearch.
+1.- Generation of random files that are inserted in Kafka using flume, processed with Storm and loaded in Elasticsearch.
 The information of each file is stored in a mysql database as they are inserted in Kafka. Once loaded there is a checking process to verify that the same data from the original file is loaded into Elasticsearch.
 
 2.- Generation of data directly inserted into kafka. This data stream is processed with Storm and loaded in Elasticsearch.
-The information of the input stream is tagged and stored again in kafka. Tagging groups are stored in a mysql database. Once loaded there is a checking process to verify that the same data from the original kafka stream is loaded into Elasticsearch.
+The information of the input stream is tagged and stored again in kafka using a kafka-streams topology. Tagging groups are stored in a mysql database. Once loaded there is a checking process to verify that the same data from the original kafka stream is loaded into Elasticsearch.
 
 If the system is very stressed (high volume of input data, Elasticsearch queries or other situations) there should be load failures that would be detected by this mechanism.
 
@@ -49,12 +49,13 @@ Use of a virtual machine is recommended. We have used a VM with 8 cores, 16 GB R
  - to configure a clustered enviroment execute: **configure-cluster.sh**
 
 ## Java projects building
- 3 java projects are built locally, many dependencies had to be downloaded. 
+ 4 java projects are built locally, many dependencies had to be downloaded. 
  This java built is included in the installation process.
 
  - storm code to process data
  - flume pluging to process files and to insert into mysql
  - random file generator to simulate the process
+ - kafka streams topology to tag a input topology
 
 ## Docker creation
  Several docker containers are created, so different images must be downloaded
@@ -69,16 +70,23 @@ Use of a virtual machine is recommended. We have used a VM with 8 cores, 16 GB R
  - Elasticsearch (3 in cluster environment)
 
 ## Execution of tests
+
+### input from file
  Data files are generated with the following command executed in the host enviroment (execute with -h option for more information):
  
  docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input -s 5 -m 6
 
  File are generated into flume container
- Flume process these files, inserting data into Kafka and metadata info into Mysql
+ Flume process these files, inserting data into Kafka and metadata info into mysql
  Storm process kafka data and insert into Elasticsearch
- Finally it is possible to check that all the data is properly inserted into Mysql checking the number of records from the file against the real number inserted into Elasticseach
+ Finally it is possible to check that all the data is properly inserted into mysql checking the number of records from the file against the real number inserted into Elasticseach
 
 This can be done using the script : check-files.sh
+
+### input directly in a kafka topic
+ Data is inserted directly into a kafka topic using a data fake generator
+
+ docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.KafkaGenerator
 
 It is possible to manually generate random errors in the check process, this can be done deleting random records (script **delete-random-records.sh**) or inserting random records (script **insert-random-records.sh**) 
 
