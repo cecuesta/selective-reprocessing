@@ -253,6 +253,7 @@ services:
       - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/plugin-flume-1.0.0.jar:/opt/flume/lib/plugin-flume-1.0.0.jar
       - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/mysql-connector-java-8.0.15.jar:/opt/flume/lib/mysql-connector-java-8.0.15.jar
       - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/file-generator-1.0.0-dep.jar:/tmp/file-generator-1.0.0-dep.jar
+      - ${SR_DIR:-/tmp/selective-reprocessing}/flume-conf/kafka-streams-sr-0.1-dep.jar:/tmp/kafka-streams-sr-0.1-dep.jar
       - ${SR_DIR:-/tmp/selective-reprocessing}/flume-input:/tmp/flume-input
     depends_on:
       - mysql

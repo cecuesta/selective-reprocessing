@@ -74,6 +74,7 @@ fi
 cd ${SR_DIR}
 ln -s ../java-flume/target/plugin-flume-1.0.0.jar flume-conf/
 ln -s ../java-gendata/target/file-generator-1.0.0-dep.jar flume-conf/
+ln -s ../java-gendata/target/kafka-streams-sr-0.1-dep.jar flume-conf/
 ln -s ../java-storm/target/sr-storm-1.0.0-dep.jar storm-conf/
 
 cd ${SR_DIR}/flume-conf

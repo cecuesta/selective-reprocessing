@@ -25,15 +25,15 @@ public class KafkaGenerator {
 
         int speed = 10 ;
         String bootstrapServers = "127.0.0.1:9092";
-        String topic = "topic_in" ;
+        String topic = "topic_in_stream" ;
         
 		Options options = new Options();
 		
 		options.addOption(new Option("h", "help", false, "Print this help"));
 		options.addOption(new Option("d", "date", true, "Date for the input data, format [yyyy-mm-dd]"));
-		options.addOption(new Option("n", "numrecords", true, "Generate n records per second (default 10)"));
-		options.addOption(new Option("b", "broker", true, "List of kafka bootstrap servers"));
-		options.addOption(new Option("t", "topic", true, "Topic name (default: topic_in)"));
+		options.addOption(new Option("n", "numrecords", true, "Generate n records per second (default " + speed + ")"));
+		options.addOption(new Option("b", "broker", true, "List of kafka bootstrap servers (default: " + bootstrapServers + ")" ));
+		options.addOption(new Option("t", "topic", true, "Topic name (default: "+ topic +")"));
         
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = null ;
@@ -111,7 +111,7 @@ public class KafkaGenerator {
             // flush data - synchronous
             producer.flush();
             
-            System.out.println("Flush to " + topic + " "+ speed) ;
+            log.info("Flush to " + topic + " "+ speed + " records") ;
             
             while (System.currentTimeMillis() - t0 < 1000) {
             	try {
