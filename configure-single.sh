@@ -20,6 +20,10 @@ fi
 
 export SR_DIR=${SCRIPT_DIR}
 
+echo SRC_DIR: $SR_DIR
+
+echo Compiling java-flume ---------------------------------------------------
+
 cd ${SR_DIR}/java-flume
 mvn clean install -Dmaven.wagon.http.ssl.insecure=true
 
@@ -27,8 +31,10 @@ if [ "$?" -ne 0 ] ; then
    echo Exiting ....
    exit
 else
-   echo flume code created
+   echo flume code created -----------------------------------------------
 fi
+
+echo Compiling java-storm ---------------------------------------------------
 
 cd ${SR_DIR}/java-storm
 mvn clean install assembly:single -Dmaven.wagon.http.ssl.insecure=true
@@ -40,6 +46,8 @@ else
    echo storm code created
 fi
 
+echo Compiling java-gendata ---------------------------------------------------
+
 cd ${SR_DIR}/java-gendata
 mvn clean install assembly:single -Dmaven.wagon.http.ssl.insecure=true
 
@@ -49,6 +57,8 @@ if [ "$?" -ne 0 ] ; then
 else
    echo gendata code created
 fi
+
+echo Compiling java-kafka-streams  ---------------------------------------------------
 
 cd ${SR_DIR}/java-kafka-streams
 mvn clean install assembly:single -Dmaven.wagon.http.ssl.insecure=true

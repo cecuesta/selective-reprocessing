@@ -42,19 +42,20 @@ public class TaggingTopology {
 
     public static void main(String[] args) {
     	
-		String topicIn = "topic_in" ; 
-		String topicOut = "topic_out" ; 
+		String topicIn = "topic_in_stream" ; 
+		String topicOut = "topic_data" ; 
 		String bootstrapServers = "127.0.0.1:9092" ;
+		String defURLmysql = "jdbc:mysql://localhost/mydatabase?user=myuser&password=rootpass" ;
 		
 		Options options = new Options();
 		options.addOption(new Option("h", "help", false, "Print this help"));
 		options.addOption(new Option("n", "numrecords", true, "Make a different tag every N records (def: 10000)"));
 		options.addOption(new Option("b", "broker", true, "List of kafka bootstrap servers (def: 127.0.0.1:9092)"));
-		options.addOption(new Option("i", "topic_in", true, "Input topic name (default: topic_in)"));
-		options.addOption(new Option("o", "topic_out", true, "Output topic name (default: topic_out)"));
+		options.addOption(new Option("i", "topic_in", true, "Input topic name (default: topic_in_stream)"));
+		options.addOption(new Option("o", "topic_out", true, "Output topic name (default: topic_data)"));
+		options.addOption(new Option("u", "mysqlurl", true, "URL for mysql (default: '" + defURLmysql + "')"));
     	
     	
-		mysqlIns = new JdbcInserter("jdbc:mysql://65.108.244.103/mydatabase?user=myuser&password=rootpass") ;
 		
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = null ;
@@ -89,7 +90,16 @@ public class TaggingTopology {
 				bootstrapServers = cmd.getParsedOptionValue("b").toString() ;
 			} catch (Exception e) {
 			}
-		}         
+		}
+		
+		if ( cmd.hasOption('u')  ) {
+			try {
+				defURLmysql = cmd.getParsedOptionValue("u").toString() ;
+			} catch (Exception e) {
+			}
+		}
+				
+		mysqlIns = new JdbcInserter(defURLmysql) ;
   
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "tagging-topology" );
