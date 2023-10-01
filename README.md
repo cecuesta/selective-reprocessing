@@ -81,9 +81,10 @@ Use of a virtual machine is recommended. We have used a VM with 8 cores, 16 GB R
  Storm process kafka tagged data and insert into Elasticsearch
 
 ### input directly in a kafka topic
- Data is inserted directly into a kafka topic using a data fake generator, generate process is started using: *start-stream-into-kafka.sh*
+ Data is inserted directly into a kafka topic using a data fake generator, generate process is started using: *start-stream-into-kafka.sh* (use the parameter CLUSTER to load into the cluster configuration)
 
- This first stream is readed from the initial topic and tagged using a kafka-streams topology. This topology can be started using: *start-tagging-stream.sh*
+ This first stream is readed from the initial topic and tagged using a kafka-streams topology. This topology can be started using: *start-tagging-stream.sh* (use the parameter CLUSTER to load into the cluster configuration)
+
  Storm process kafka tagged data and insert into Elasticsearch
 
 ### Checking tags (both from stream and from files)

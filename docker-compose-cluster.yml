@@ -8,8 +8,6 @@ networks:
         - subnet: 172.29.30.0/24 # Specify subnet
 
 services:
-
-services:
   zookeeper:
     image: 'bitnami/zookeeper:3.7'
     container_name: zookeeper

@@ -14,7 +14,7 @@ then
    SECONDS_BETWEEN_FILES=5
 fi
 
-echo Generate $NUM_FILES every $SECONDS_BETWEEN_FILES seconds
+echo Generate a total of $NUM_FILES files every $SECONDS_BETWEEN_FILES seconds
 echo
 
 docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input -s $SECONDS_BETWEEN_FILES -m $NUM_FILES
