@@ -36,7 +36,7 @@ import org.apache.kafka.streams.Topology;
  * each record represents a single word.
  */
 public class TaggingTopology {
-	public static int numRecords = 100 ;
+	public static int numRecords = 5000 ;
 	
 	public static JdbcInserter mysqlIns ;
 

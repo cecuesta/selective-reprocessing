@@ -115,7 +115,7 @@ public class FileGenerator {
 					tsTo = new Date( tsFrom.getTime() + 1000*seconds - 100);
 				}
 				
-				filename = "data_" + sdfFileName.format(new Date() ) + "_" + String.format( "%06d", counter); ;
+				filename = "file_" + sdfFileName.format(new Date() ) + "_" + String.format( "%06d", counter); ;
 				generateFile( filename, numRecords ) ;
 
 				while ( System.currentTimeMillis() < tnext) {

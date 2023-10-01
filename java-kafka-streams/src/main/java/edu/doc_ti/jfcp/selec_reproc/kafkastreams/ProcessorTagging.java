@@ -17,7 +17,7 @@ public class ProcessorTagging implements Processor<String, String, String, Strin
     
     int counterTags = 1 ;
     int counterRecords = 0 ;
-    String currentTag = baseID + "_" + Integer.toString(counterTags) ;
+    String currentTag = baseID + "_" + String.format( "%06d", counterTags) ;
    
 	@Override
     public void init(final ProcessorContext<String, String> context) {
@@ -63,7 +63,7 @@ public class ProcessorTagging implements Processor<String, String, String, Strin
     	// FALTA MANDAR a MYSQL
     	counterRecords = 0 ;
     	counterTags++ ;
-    	currentTag = baseID + "_" + Integer.toString(counterTags) ;
+    	currentTag = baseID + "_" + String.format( "%06d", counterTags) ;
 	}
 
 	@Override

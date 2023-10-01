@@ -72,23 +72,25 @@ Use of a virtual machine is recommended. We have used a VM with 8 cores, 16 GB R
 ## Execution of tests
 
 ### input from file
- Data files are generated with the following command executed in the host enviroment (execute with -h option for more information):
+ Data files are generated with the following command executed in the host enviroment (you can execute then java class directly with -h option for more information):
  
- docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.FileGenerator -p /tmp/flume-input -s 5 -m 6
+ generate-files.sh [num files to generate] [seconds between files]
 
  File are generated into flume container
- Flume process these files, inserting data into Kafka and metadata info into mysql
- Storm process kafka data and insert into Elasticsearch
+ Flume process these files, inserting data into Kafka and tagging metadata info into mysql
+ Storm process kafka tagged data and insert into Elasticsearch
+
+### input directly in a kafka topic
+ Data is inserted directly into a kafka topic using a data fake generator, generate process is started using: *start-stream-into-kafka.sh*
+
+ This first stream is readed from the initial topic and tagged using a kafka-streams topology. This topology can be started using: *start-tagging-stream.sh*
+ Storm process kafka tagged data and insert into Elasticsearch
+
+### Checking tags (both from stream and from files)
  Finally it is possible to check that all the data is properly inserted into mysql checking the number of records from the file against the real number inserted into Elasticseach
 
 This can be done using the script : check-files.sh
-
-### input directly in a kafka topic
- Data is inserted directly into a kafka topic using a data fake generator
-
- docker exec -it flume java -cp /tmp/file-generator-1.0.0-dep.jar edu.doc_ti.jfcp.selec_reproc.gendata.KafkaGenerator
-
-It is possible to manually generate random errors in the check process, this can be done deleting random records (script **delete-random-records.sh**) or inserting random records (script **insert-random-records.sh**) 
+In both scenarios it is possible to manually generate random errors in the check process, this can be done deleting random records (script **delete-random-records.sh**) or inserting random records (script **insert-random-records.sh**) 
 
 
 ## Warnings in docker creation & configuration

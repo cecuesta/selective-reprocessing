@@ -23,7 +23,7 @@ public class KafkaGenerator {
     public static void main(String[] args) {
         log.info("I am a Kafka Producer");
 
-        int speed = 10 ;
+        int speed = 500 ;
         String bootstrapServers = "127.0.0.1:9092";
         String topic = "topic_in_stream" ;
         
