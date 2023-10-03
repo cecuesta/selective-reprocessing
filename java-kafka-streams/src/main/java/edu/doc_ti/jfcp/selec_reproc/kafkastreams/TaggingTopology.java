@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.kafka.common.serialization.Serdes;
@@ -65,6 +66,13 @@ public class TaggingTopology {
 			e1.printStackTrace();
 			System.exit(-1);
 		}
+
+		if ( cmd.hasOption('h') || cmd.getOptions().length < 0 ) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("TaggingTopology", options);
+			System.exit(0) ;
+		}
+       
 		
 		if ( cmd.hasOption('n')  ) {
 			try {
