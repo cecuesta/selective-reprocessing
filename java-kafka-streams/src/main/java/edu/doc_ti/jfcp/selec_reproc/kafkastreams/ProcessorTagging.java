@@ -45,8 +45,11 @@ public class ProcessorTagging implements Processor<String, String, String, Strin
 //    	System.out.println( "THREAD: " + Thread.currentThread().getName() ) ;
     	
     	Record<String, String> recordOut = new Record<String, String>(record.key(),
-    			currentTag + ";" + Integer.toString( counterRecords) + ";" +
-    			record.value(), record.timestamp()) ;
+    					currentTag + ";" + 
+    	    			Integer.toString( counterRecords) + ";" +
+    	    			_context.recordMetadata().get().topic() + ":" + _context.recordMetadata().get().partition() + ":" + _context.recordMetadata().get().offset() + ";" +  
+//    	    			Integer.toString( counterRecords) + ";" +
+    	    			record.value(), record.timestamp()) ;
 		_context.forward(recordOut);
 
 		if ( counterRecords % TaggingTopology.numRecords == 0 ) {
